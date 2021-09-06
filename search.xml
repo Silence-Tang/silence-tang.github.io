@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>B站清华数据挖掘笔记（二）——感知机&amp;手推BP神经网络权重更新公式</title>
+      <link href="/2021/09/06/B%E7%AB%99%E6%B8%85%E5%8D%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%E6%84%9F%E7%9F%A5%E6%9C%BA&amp;%E6%89%8B%E6%8E%A8BP%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%9D%83%E9%87%8D%E6%9B%B4%E6%96%B0%E5%85%AC%E5%BC%8F/"/>
+      <url>/2021/09/06/B%E7%AB%99%E6%B8%85%E5%8D%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%E6%84%9F%E7%9F%A5%E6%9C%BA&amp;%E6%89%8B%E6%8E%A8BP%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%9D%83%E9%87%8D%E6%9B%B4%E6%96%B0%E5%85%AC%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[<div style="display: flex; justify-content: center;">    <img src="https://img-blog.csdnimg.cn/3a029629b9554b528ae4928b6cba6c2b.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_32,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/27bc610badcd487383a96c8b82e40c4d.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/6dde84a9e5be4bd4bed16562f66ae6b7.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/b48020e5b0344446be6155e577849795.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/ef4df82771414670ad2400ab1133ee6a.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据挖掘 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 神经网络 </tag>
+            
+            <tag> 感知机 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>B站清华数据挖掘笔记（一）——朴素贝叶斯&amp;决策树</title>
+      <link href="/2021/09/06/B%E7%AB%99%E6%B8%85%E5%8D%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E2%80%94%E2%80%94%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF&amp;%E5%86%B3%E7%AD%96%E6%A0%91/"/>
+      <url>/2021/09/06/B%E7%AB%99%E6%B8%85%E5%8D%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E2%80%94%E2%80%94%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF&amp;%E5%86%B3%E7%AD%96%E6%A0%91/</url>
+      
+        <content type="html"><![CDATA[<div style="display: flex; justify-content: center;">    <img src="https://img-blog.csdnimg.cn/a0a5b5c5f83e4dc3a8d5cd15be253ea0.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/bb60765011b842628917cd84bf284ac1.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/a2d4d9ab75d946c792f1a6d88adfa188.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_40,color_FFFFFF,t_70,g_se,x_16"></div>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据挖掘 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 分类器 </tag>
+            
+            <tag> 决策树 </tag>
+            
+            <tag> 朴素贝叶斯 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>B站清华数据挖掘笔记（三）——3类SVM支持向量机决策超平面的推导</title>
+      <link href="/2021/09/05/B%E7%AB%99%E6%B8%85%E5%8D%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%E2%80%94%E2%80%943%E7%B1%BBSVM%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA%E5%86%B3%E7%AD%96%E8%B6%85%E5%B9%B3%E9%9D%A2%E7%9A%84%E6%8E%A8%E5%AF%BC/"/>
+      <url>/2021/09/05/B%E7%AB%99%E6%B8%85%E5%8D%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%E2%80%94%E2%80%943%E7%B1%BBSVM%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA%E5%86%B3%E7%AD%96%E8%B6%85%E5%B9%B3%E9%9D%A2%E7%9A%84%E6%8E%A8%E5%AF%BC/</url>
+      
+        <content type="html"><![CDATA[<div style="display: flex; justify-content: center;">    <img src="https://img-blog.csdnimg.cn/fab939bffd0d4e3e965a33740883e75a.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/8bd8d992c8c544d58d04f4403728ca79.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/10bbc827d975473987952a1151e45102.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/3410be50a55347e7a69eff89247acc9b.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/9a857cba8f204da7940498e64e40a29a.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_40,color_FFFFFF,t_70,g_se,x_16"></div>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据挖掘 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> SVM </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>B站清华数据挖掘笔记（五）——Apriori算法</title>
+      <link href="/2021/09/05/B%E7%AB%99%E6%B8%85%E5%8D%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89%E2%80%94%E2%80%94Apriori%E7%AE%97%E6%B3%95/"/>
+      <url>/2021/09/05/B%E7%AB%99%E6%B8%85%E5%8D%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89%E2%80%94%E2%80%94Apriori%E7%AE%97%E6%B3%95/</url>
+      
+        <content type="html"><![CDATA[<div style="display: flex; justify-content: center;">    <img src="https://img-blog.csdnimg.cn/bbbddbd70c054a038e61a227e9036c45.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_40,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/021ccc3b838843b39a3b2aa32e40a3cc.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_48,color_FFFFFF,t_70,g_se,x_16"></div>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据挖掘 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Apriori </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>B站清华数据挖掘笔记（六）——集成学习（Bagging&amp;AdaBoost）</title>
+      <link href="/2021/09/05/B%E7%AB%99%E6%B8%85%E5%8D%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%E2%80%94%E2%80%94%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0%EF%BC%88Bagging&amp;AdaBoost%EF%BC%89/"/>
+      <url>/2021/09/05/B%E7%AB%99%E6%B8%85%E5%8D%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%E2%80%94%E2%80%94%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0%EF%BC%88Bagging&amp;AdaBoost%EF%BC%89/</url>
+      
+        <content type="html"><![CDATA[<div style="display: flex; justify-content: center;">    <img src="https://img-blog.csdnimg.cn/f1f642f485344066b2c2ccd9cc8a2993.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_40,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/201e7c6e72c940b6a0eb5f96a2e11a16.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;">    <img src="https://img-blog.csdnimg.cn/6c9d0ebac61d46119d8fd3cc6a37292a.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/424fead776554fff926fdeadc2ab8680.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;">    <img src="https://img-blog.csdnimg.cn/60f7b1ac8cdc45f6a62758dae29c111e.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_81,color_FFFFFF,t_70,g_se,x_16"></div>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据挖掘 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 集成学习 </tag>
+            
+            <tag> 机器学习 </tag>
+            
+            <tag> Bagging </tag>
+            
+            <tag> AdaBoost </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>B站清华数据挖掘笔记（四）——聚类（K-Means&amp;层次聚类）</title>
+      <link href="/2021/09/05/B%E7%AB%99%E6%B8%85%E5%8D%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89%E2%80%94%E2%80%94%E8%81%9A%E7%B1%BB%EF%BC%88K-Means&amp;%E5%B1%82%E6%AC%A1%E8%81%9A%E7%B1%BB%EF%BC%89/"/>
+      <url>/2021/09/05/B%E7%AB%99%E6%B8%85%E5%8D%8E%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89%E2%80%94%E2%80%94%E8%81%9A%E7%B1%BB%EF%BC%88K-Means&amp;%E5%B1%82%E6%AC%A1%E8%81%9A%E7%B1%BB%EF%BC%89/</url>
+      
+        <content type="html"><![CDATA[<div style="display: flex; justify-content: center;">    <img src="https://img-blog.csdnimg.cn/a7d5531ff57b4a0e9e06fe371775afde.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_32,color_FFFFFF,t_70,g_se,x_16"></div><div style="display: flex; justify-content: center;"><img src="https://img-blog.csdnimg.cn/79145daca73144b894f175c3d798e72e.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_Q1NETiBAUG9sYXJpc19U,size_40,color_FFFFFF,t_70,g_se,x_16"></div>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据挖掘 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 聚类 </tag>
+            
+            <tag> K-Means </tag>
+            
+            <tag> 层次聚类 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="/2021/09/04/Hello%20World/"/>
+      <url>/2021/09/04/Hello%20World/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><img align="middle" src="https://z3.ax1x.com/2021/07/18/W8NOvq.jpg"><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></tbody></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><hr><h2 id="title-Hello-World"><a href="#title-Hello-World" class="headerlink" title="title: Hello World"></a>title: Hello World</h2><p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start-1"><a href="#Quick-Start-1" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post-1"><a href="#Create-a-new-post-1" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></tbody></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><hr><h2 id="title-Hello-World-1"><a href="#title-Hello-World-1" class="headerlink" title="title: Hello World"></a>title: Hello World</h2><p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start-2"><a href="#Quick-Start-2" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post-2"><a href="#Create-a-new-post-2" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></tbody></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><hr><h2 id="title-Hello-World-2"><a href="#title-Hello-World-2" class="headerlink" title="title: Hello World"></a>title: Hello World</h2><p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start-3"><a href="#Quick-Start-3" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post-3"><a href="#Create-a-new-post-3" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></tbody></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+  
+  
+</search>
