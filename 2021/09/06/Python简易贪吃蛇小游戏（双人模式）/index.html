@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"silence-tang.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"always","padding":18,"offset":12},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="这里介绍双人模式的贪吃蛇  单人模式戳这里：Python简易贪吃蛇小游戏（单人模式） 一、游戏设计要点  1.游戏主体窗口（尺寸）、画布（尺寸、位置）、按钮（尺寸、位置）、文字（大小、颜色、位置）、图像、背景音乐及相关响应函数（主要是鼠标移动及点击的响应）的设计与合理排布  2.蛇与食物的类的属性设计  3.蛇位置的更新（根据键盘输入）、吃到食物加分的判定、食物的更新  4.蛇死亡的判定条件设">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python简易贪吃蛇小游戏（双人模式）">
+<meta property="og:url" content="http://silence-tang.github.io/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8F%8C%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/index.html">
+<meta property="og:site_name" content="Silence&#39;s Blog">
+<meta property="og:description" content="这里介绍双人模式的贪吃蛇  单人模式戳这里：Python简易贪吃蛇小游戏（单人模式） 一、游戏设计要点  1.游戏主体窗口（尺寸）、画布（尺寸、位置）、按钮（尺寸、位置）、文字（大小、颜色、位置）、图像、背景音乐及相关响应函数（主要是鼠标移动及点击的响应）的设计与合理排布  2.蛇与食物的类的属性设计  3.蛇位置的更新（根据键盘输入）、吃到食物加分的判定、食物的更新  4.蛇死亡的判定条件设">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-06T12:11:00.000Z">
+<meta property="article:modified_time" content="2021-09-06T12:15:09.935Z">
+<meta property="article:author" content="Silence Tang">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="pygame">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://silence-tang.github.io/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8F%8C%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Python简易贪吃蛇小游戏（双人模式） | Silence's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Silence's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Live for Die</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">32</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">32</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://silence-tang.github.io/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8F%8C%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/profile.jpg">
+      <meta itemprop="name" content="Silence Tang">
+      <meta itemprop="description" content="Wir müssen wissen. Wir werden wissen.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Silence's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python简易贪吃蛇小游戏（双人模式）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-06 20:11:00 / 修改时间：20:15:09" itemprop="dateCreated datePublished" datetime="2021-09-06T20:11:00+08:00">2021-09-06</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8F%8C%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8F%8C%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>  这里介绍双人模式的贪吃蛇<br>  单人模式戳这里：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45717425/article/details/119790028">Python简易贪吃蛇小游戏（单人模式）</a></p>
+<h2 id="一、游戏设计要点"><a href="#一、游戏设计要点" class="headerlink" title="一、游戏设计要点"></a>一、游戏设计要点</h2><p>  1.游戏主体窗口（尺寸）、画布（尺寸、位置）、按钮（尺寸、位置）、文字（大小、颜色、位置）、图像、背景音乐及相关响应函数（主要是鼠标移动及点击的响应）的设计与合理排布<br>  2.蛇与食物的类的属性设计<br>  3.蛇位置的更新（根据键盘输入）、吃到食物加分的判定、食物的更新<br>  4.蛇死亡的判定条件设计</p>
+<span id="more"></span>
+
+<h2 id="二、主要模块"><a href="#二、主要模块" class="headerlink" title="二、主要模块"></a>二、主要模块</h2><p><strong>  1.pygame<br>  2.sys<br>  3.random</strong></p>
+<h2 id="三、用到的类"><a href="#三、用到的类" class="headerlink" title="三、用到的类"></a>三、用到的类</h2><p>  1.Snake类，定义蛇头蛇身元素的位置<br>  2.Food类，定义食物元素的位置及单个元素的颜色</p>
+<h2 id="四、主要函数"><a href="#四、主要函数" class="headerlink" title="四、主要函数"></a>四、主要函数</h2><p>1.new_food()，功能：生成一个不与蛇头位置重合的食物并返回该食物对象</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">new_food</span>(<span class="params">head</span>):</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="comment"># 循环，不断实例化new_food对象直到生成一个不与蛇头重合的食物</span></span><br><span class="line">        new_food = Food(randint(<span class="number">0</span>, <span class="number">45</span>) * <span class="number">20</span>, randint(<span class="number">0</span>, <span class="number">28</span>) * <span class="number">20</span>, (randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>)))</span><br><span class="line">        <span class="comment"># 若new_food和蛇头重合则不创键</span></span><br><span class="line">        <span class="keyword">if</span> new_food.x != head.x <span class="keyword">and</span> new_food.y != head.y:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">    <span class="keyword">return</span> new_food</span><br></pre></td></tr></tbody></table></figure>
+<p>2.draw_snake()、draw_food()函数，功能：绘制蛇与食物的图像，传入参数为颜色和对象：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在窗体中绘制贪吃蛇</span></span><br><span class="line"><span class="comment"># 形参：一个是颜色另一个是实例化对象</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">draw_snake</span>(<span class="params">color, <span class="built_in">object</span></span>):</span></span><br><span class="line">    pygame.draw.circle(window, color, (<span class="built_in">object</span>.x, <span class="built_in">object</span>.y), <span class="number">10</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 在窗体中绘制食物</span></span><br><span class="line"><span class="comment"># 形参：实例化对象</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">draw_food</span>(<span class="params">food</span>):</span></span><br><span class="line">    pygame.draw.circle(window, food.color, (food.x, food.y), <span class="number">10</span>)</span><br></pre></td></tr></tbody></table></figure>
+<p>3.show_end函数，功能：显示双人模式结束时的得分界面：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show_end</span>():</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        window.blit(init_background, (<span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">        <span class="keyword">for</span> event <span class="keyword">in</span> pygame.event.get():</span><br><span class="line">            <span class="keyword">if</span> event.<span class="built_in">type</span> == pygame.QUIT:</span><br><span class="line">                exit_end()</span><br><span class="line">        <span class="comment"># 定义标题</span></span><br><span class="line">        pygame.display.set_caption(<span class="string">"贪吃蛇大冒险"</span>)</span><br><span class="line">        <span class="comment"># 定义提示文字</span></span><br><span class="line">        font = pygame.font.SysFont(<span class="string">"simHei"</span>, <span class="number">40</span>)</span><br><span class="line">        fontsurf = font.render(<span class="string">'游戏结束! 玩家1得分: %s 玩家2得分：%s'</span> % (score1, score2), <span class="literal">True</span>, black)</span><br><span class="line">        window.blit(fontsurf, (<span class="number">150</span>, <span class="number">100</span>))</span><br><span class="line">        button(<span class="string">"返回主菜单"</span>, <span class="number">370</span>, <span class="number">300</span>, <span class="number">200</span>, <span class="number">40</span>, blue, brightred, into_game)</span><br><span class="line">        button(<span class="string">"退出游戏"</span>, <span class="number">370</span>, <span class="number">470</span>, <span class="number">200</span>, <span class="number">40</span>, red, brightred, exit_end)</span><br><span class="line">        pygame.display.update()</span><br><span class="line">        clock.tick(<span class="number">20</span>)</span><br></pre></td></tr></tbody></table></figure>
+<p>4.exit_end()函数，功能：在初始界面和游戏结束显示得分界面点击右上角的”×”时，直接退出整个游戏：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 初始界面和游戏中途点击退出游戏时</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exit_end</span>():</span></span><br><span class="line">    pygame.quit()</span><br><span class="line">    sys.exit()</span><br></pre></td></tr></tbody></table></figure>
+<p>5.start_game_double()函数，功能：实现双人正常模式：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">start_game_double</span>():</span></span><br><span class="line">    <span class="comment"># 播放音乐</span></span><br><span class="line">    pygame.mixer.music.play(-<span class="number">1</span>)</span><br><span class="line">    <span class="comment"># 定义存分数的全局变量</span></span><br><span class="line">    <span class="keyword">global</span> score1</span><br><span class="line">    <span class="keyword">global</span> score2</span><br><span class="line">    score1 = score2 = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 初始化存放玩家键盘输入运动方向的变量</span></span><br><span class="line">    run_direction1 = <span class="string">"right"</span></span><br><span class="line">    run_direction2 = <span class="string">"up"</span></span><br><span class="line">    <span class="comment"># 初始化贪吃蛇运动方向的变量</span></span><br><span class="line">    run1 = run_direction1</span><br><span class="line">    run2 = run_direction2</span><br><span class="line">    <span class="comment"># 实例化贪吃蛇和食物对象</span></span><br><span class="line">    head1 = Snake(randint(<span class="number">0</span>, <span class="number">30</span>) * <span class="number">20</span>, randint(<span class="number">0</span>, <span class="number">20</span>) * <span class="number">20</span>)</span><br><span class="line">    head2 = Snake(randint(<span class="number">0</span>, <span class="number">30</span>) * <span class="number">20</span>, randint(<span class="number">0</span>, <span class="number">20</span>) * <span class="number">20</span>)</span><br><span class="line">    <span class="comment"># 实例化蛇身长度为2个单位</span></span><br><span class="line">    snake_body1 = [Snake(head1.x, head1.y + <span class="number">20</span>), Snake(head1.x, head1.y + <span class="number">40</span>)]</span><br><span class="line">    snake_body2 = [Snake(head2.x, head2.y + <span class="number">20</span>), Snake(head2.x, head2.y + <span class="number">40</span>)]</span><br><span class="line">    <span class="comment"># 实例化食物列表，列表随着其中食物被吃掉应该不断缩短</span></span><br><span class="line">    food_list = [Food(randint(<span class="number">0</span>, <span class="number">45</span>) * <span class="number">20</span>, randint(<span class="number">0</span>, <span class="number">28</span>) * <span class="number">20</span>, (randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>)))]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">24</span>):</span><br><span class="line">        food_list.append(Food(randint(<span class="number">0</span>, <span class="number">45</span>) * <span class="number">20</span>, randint(<span class="number">0</span>, <span class="number">28</span>) * <span class="number">20</span>, (randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>))))</span><br><span class="line">    <span class="comment"># 实例化单个食物，方便循环内生成单个新食物</span></span><br><span class="line">    food = Food(randint(<span class="number">0</span>, <span class="number">45</span>) * <span class="number">20</span>, randint(<span class="number">0</span>, <span class="number">28</span>) * <span class="number">20</span>, (randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>)))</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        window.blit(background, (<span class="number">0</span>,<span class="number">0</span>))</span><br><span class="line">        <span class="comment"># 监听玩家键盘输入的运动方向值，并根据输入转为up、down、right或left，方便程序中调用</span></span><br><span class="line">        <span class="comment"># pygame.event.get()返回一个列表，存放本次game执行中程序遇到的一连串事件（按时间顺序依次存放）</span></span><br><span class="line">        <span class="keyword">for</span> event <span class="keyword">in</span> pygame.event.get():</span><br><span class="line">            <span class="comment"># pygame.QUIT事件是指用户点击窗口右上角的"×"</span></span><br><span class="line">            <span class="keyword">if</span> event.<span class="built_in">type</span> == pygame.QUIT:</span><br><span class="line">                <span class="comment"># 显示结果界面</span></span><br><span class="line">                show_end()</span><br><span class="line">            <span class="comment"># 若事件类型是按下键盘，分↑ ↓ ← →四种情况讨论</span></span><br><span class="line">            <span class="keyword">elif</span> event.<span class="built_in">type</span> == pygame.KEYDOWN:</span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘↑</span></span><br><span class="line">                <span class="comment"># key是键值，表示按下去的键值是什么</span></span><br><span class="line">                <span class="keyword">if</span> event.key == pygame.K_UP:</span><br><span class="line">                    run_direction2 = <span class="string">"up"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘↓</span></span><br><span class="line">                <span class="keyword">if</span> event.key == pygame.K_DOWN:</span><br><span class="line">                    run_direction2 = <span class="string">"down"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘←</span></span><br><span class="line">                <span class="keyword">if</span> event.key == pygame.K_LEFT:</span><br><span class="line">                    run_direction2 = <span class="string">"left"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘→</span></span><br><span class="line">                <span class="keyword">if</span> event.key == pygame.K_RIGHT:</span><br><span class="line">                    run_direction2 = <span class="string">"right"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘↑</span></span><br><span class="line">                <span class="keyword">if</span> event.key == <span class="built_in">ord</span>(<span class="string">'w'</span>):</span><br><span class="line">                    run_direction1 = <span class="string">"up"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘↓</span></span><br><span class="line">                <span class="keyword">if</span> event.key == <span class="built_in">ord</span>(<span class="string">'s'</span>):</span><br><span class="line">                    run_direction1 = <span class="string">"down"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘←</span></span><br><span class="line">                <span class="keyword">if</span> event.key == <span class="built_in">ord</span>(<span class="string">'a'</span>):</span><br><span class="line">                    run_direction1 = <span class="string">"left"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘→</span></span><br><span class="line">                <span class="keyword">if</span> event.key == <span class="built_in">ord</span>(<span class="string">'d'</span>):</span><br><span class="line">                    run_direction1 = <span class="string">"right"</span></span><br><span class="line">        <span class="comment"># 绘制初始化的25个食物图像(24+1=25)</span></span><br><span class="line">        <span class="comment"># 随着该列表中的食物被吃掉，列表应该不断pop以清除已经被吃的事物</span></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> food_list:</span><br><span class="line">            draw_food(item)</span><br><span class="line">        <span class="comment"># 绘制被贪吃蛇吃掉后新增的食物图像</span></span><br><span class="line">        draw_food(food)</span><br><span class="line">        <span class="comment"># 绘制蛇头图像</span></span><br><span class="line">        <span class="comment"># 在绘制蛇头之前先检查是不是已经死亡，如果已死亡，则不绘制</span></span><br><span class="line">        <span class="comment"># ！！不能通过die_flag判断是否死亡因为每次循环一开头die_flag都初始化为False</span></span><br><span class="line">        <span class="comment"># 因此最好的方法是通过snake_body是否为空判断</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body1) != <span class="number">0</span>:</span><br><span class="line">            draw_snake(black, head1)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body2) != <span class="number">0</span>:</span><br><span class="line">            draw_snake(black, head2)</span><br><span class="line">        <span class="comment"># 绘制蛇身图像</span></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> snake_body1:</span><br><span class="line">            draw_snake(blue, item)</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> snake_body2:</span><br><span class="line">            draw_snake(green, item)</span><br><span class="line">        <span class="comment"># 若蛇未死亡，则插入蛇头位置到蛇身列表中</span></span><br><span class="line">        <span class="comment"># 即：若蛇已死亡，则保持snake_body为空不变</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body1) != <span class="number">0</span>:</span><br><span class="line">            snake_body1.insert(<span class="number">0</span>, Snake(head1.x, head1.y))</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body2) != <span class="number">0</span>:</span><br><span class="line">            snake_body2.insert(<span class="number">0</span>, Snake(head2.x, head2.y))</span><br><span class="line">        <span class="comment"># 判断贪吃蛇原运动方向(run)与玩家键盘输入的运动方向(run_direction)是否违反正常运动情况</span></span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"up"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction1 == <span class="string">"down"</span>:</span><br><span class="line">            run1 = run_direction1</span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"down"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction1 == <span class="string">"up"</span>:</span><br><span class="line">            run1 = run_direction1</span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"left"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction1 == <span class="string">"right"</span>:</span><br><span class="line">            run1 = run_direction1</span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"right"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction1 == <span class="string">"left"</span>:</span><br><span class="line">            run1 = run_direction1</span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"up"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction2 == <span class="string">"down"</span>:</span><br><span class="line">            run2 = run_direction2</span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"down"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction2 == <span class="string">"up"</span>:</span><br><span class="line">            run2 = run_direction2</span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"left"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction2 == <span class="string">"right"</span>:</span><br><span class="line">            run2 = run_direction2</span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"right"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction2 == <span class="string">"left"</span>:</span><br><span class="line">            run2 = run_direction2</span><br><span class="line">        <span class="comment"># 根据玩家键入方向进行蛇头坐标的更新</span></span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"up"</span>:</span><br><span class="line">            head1.y -= <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"down"</span>:</span><br><span class="line">            head1.y += <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"left"</span>:</span><br><span class="line">            head1.x -= <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"right"</span>:</span><br><span class="line">            head1.x += <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"up"</span>:</span><br><span class="line">            head2.y -= <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"down"</span>:</span><br><span class="line">            head2.y += <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"left"</span>:</span><br><span class="line">            head2.x -= <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"right"</span>:</span><br><span class="line">            head2.x += <span class="number">20</span></span><br><span class="line">        <span class="comment"># 判断两条蛇是否死亡</span></span><br><span class="line">        <span class="comment"># 初始化四个死亡标志为False</span></span><br><span class="line">        die_flag1 = die_flag2 = <span class="literal">False</span></span><br><span class="line">        <span class="comment"># 此时snake_body1,2中均已包含蛇头</span></span><br><span class="line">        <span class="comment"># snake_body1,2第一个元素是蛇头，故不能从0号元素开始比较</span></span><br><span class="line">        <span class="comment"># 因为该蛇蛇头必然和自己重合</span></span><br><span class="line">        <span class="comment"># 这里snake_body1,2均从1号元素开始</span></span><br><span class="line">        <span class="comment"># 所以snake_body1[1:]+snake_body2[1:]是纯粹存储蛇身的列表</span></span><br><span class="line">        <span class="keyword">for</span> body <span class="keyword">in</span> snake_body1[<span class="number">1</span>:]+snake_body2[<span class="number">1</span>:]:</span><br><span class="line">            <span class="keyword">if</span> head1.x == body.x <span class="keyword">and</span> head1.y == body.y:</span><br><span class="line">                die_flag1 = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">if</span> head2.x == body.x <span class="keyword">and</span> head2.y == body.y:</span><br><span class="line">                die_flag2 = <span class="literal">True</span></span><br><span class="line">        <span class="keyword">if</span> die_flag1 == <span class="literal">True</span> <span class="keyword">or</span> head1.x &lt; <span class="number">0</span> <span class="keyword">or</span> head1.x &gt; <span class="number">960</span> <span class="keyword">or</span> head1.y &lt; <span class="number">0</span> <span class="keyword">or</span> head1.y &gt; <span class="number">600</span>:</span><br><span class="line">            <span class="comment"># 注意：这边虽然蛇身列表清空，但head1对象仍存在</span></span><br><span class="line">            <span class="comment"># 故必须要在上面的绘制蛇头代码前面加上if先判断蛇是否死亡</span></span><br><span class="line">            snake_body1.clear()</span><br><span class="line">        <span class="keyword">if</span> die_flag2 == <span class="literal">True</span> <span class="keyword">or</span> head2.x &lt; <span class="number">0</span> <span class="keyword">or</span> head2.x &gt; <span class="number">960</span> <span class="keyword">or</span> head2.y &lt; <span class="number">0</span> <span class="keyword">or</span> head2.y &gt; <span class="number">600</span>:</span><br><span class="line">            die_flag2 = <span class="literal">True</span></span><br><span class="line">            <span class="comment"># 注意：这边虽然蛇身列表清空，但head1对象仍存在</span></span><br><span class="line">            <span class="comment"># 故必须要在上面的绘制蛇头代码前面加上if先判断蛇是否死亡</span></span><br><span class="line">            snake_body2.clear()</span><br><span class="line">        <span class="comment"># 若两条蛇都死亡</span></span><br><span class="line">        <span class="comment"># 同样地，只能通过snake_body是否为空判断蛇是否死亡</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body1) == <span class="number">0</span> <span class="keyword">and</span> <span class="built_in">len</span>(snake_body2) == <span class="number">0</span>:</span><br><span class="line">            show_end()</span><br><span class="line">        <span class="comment"># 判断蛇头和食物坐标，若相等，则加分，并生成新的食物</span></span><br><span class="line">        <span class="comment"># 定义标志，表明是否找到和蛇头相等的食物</span></span><br><span class="line">        <span class="keyword">global</span> flag1</span><br><span class="line">        <span class="keyword">global</span> flag2</span><br><span class="line">        flag1 = flag2 = <span class="number">0</span></span><br><span class="line">        <span class="comment"># 如果蛇头和食物重合</span></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> food_list:</span><br><span class="line">            <span class="comment"># 在蛇1没死且蛇头1和某一食物坐标相等的条件下</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(snake_body1) != <span class="number">0</span> <span class="keyword">and</span> (head1.x == item.x <span class="keyword">and</span> head1.y == item.y <span class="keyword">or</span> head1.x == food.x <span class="keyword">and</span> head1.y == food.y):</span><br><span class="line">                flag1 = <span class="number">1</span></span><br><span class="line">                score1 += <span class="number">1</span></span><br><span class="line">                <span class="comment"># 弹出被吃掉的这个食物</span></span><br><span class="line">                food_list.pop(food_list.index(item))</span><br><span class="line">                <span class="comment"># 再产生一个食物</span></span><br><span class="line">                food = new_food(head1)</span><br><span class="line">                <span class="comment"># 把新食物插入food_list，下一次循环中会更新绘制食物全体</span></span><br><span class="line">                food_list.append(food)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="comment"># 在蛇2没死的且蛇头2和某一食物坐标相等的条件下</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="built_in">len</span>(snake_body2) != <span class="number">0</span> <span class="keyword">and</span> head2.x == item.x <span class="keyword">and</span> head2.y == item.y <span class="keyword">or</span> head2.x == food.x <span class="keyword">and</span> head2.y == food.y:</span><br><span class="line">                flag2 = <span class="number">1</span></span><br><span class="line">                score2 += <span class="number">1</span></span><br><span class="line">                <span class="comment"># 弹出被吃掉的这个食物</span></span><br><span class="line">                food_list.pop(food_list.index(item))</span><br><span class="line">                <span class="comment"># 再产生一个食物</span></span><br><span class="line">                food = new_food(head2)</span><br><span class="line">                <span class="comment"># 把新食物插入food_list，下一次循环中会更新绘制食物全体</span></span><br><span class="line">                food_list.append(food)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="comment"># 蛇1必须没死，否则pop会引发异常</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body1) != <span class="number">0</span> <span class="keyword">and</span> flag1 == <span class="number">0</span>:</span><br><span class="line">            snake_body1.pop()</span><br><span class="line">        <span class="comment"># 蛇2必须没死，否则pop会引发异常</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body2) != <span class="number">0</span> <span class="keyword">and</span> flag2 == <span class="number">0</span>:</span><br><span class="line">            snake_body2.pop ()</span><br><span class="line">        font = pygame.font.SysFont(<span class="string">"simHei"</span>, <span class="number">25</span>)</span><br><span class="line">        mode_title1 = mode_title2 = font.render(<span class="string">'正常模式'</span>, <span class="literal">False</span>, grey)</span><br><span class="line">        socre_title1 = font.render(<span class="string">'得分: %s'</span> % score1, <span class="literal">False</span>, grey)</span><br><span class="line">        socre_title2 = font.render(<span class="string">'得分: %s'</span> % score2, <span class="literal">False</span>, grey)</span><br><span class="line">        window.blit(mode_title1, (<span class="number">50</span>, <span class="number">30</span>))</span><br><span class="line">        window.blit(socre_title1, (<span class="number">50</span>, <span class="number">65</span>))</span><br><span class="line">        window.blit(mode_title2, (<span class="number">800</span>, <span class="number">30</span>))</span><br><span class="line">        window.blit(socre_title2, (<span class="number">800</span>, <span class="number">65</span>))</span><br><span class="line">        <span class="comment"># 更新蛇头蛇身和食物的数据</span></span><br><span class="line">        pygame.display.update()</span><br><span class="line">        <span class="comment"># 通过帧率设置贪吃蛇速度</span></span><br><span class="line">        clock.tick(<span class="number">8</span>)</span><br></pre></td></tr></tbody></table></figure>
+<p>6.start_kgame_double()函数，功能：实现双人穿墙模式：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">start_kgame_double</span>():</span></span><br><span class="line">    <span class="comment"># 播放音乐</span></span><br><span class="line">    pygame.mixer.music.play(-<span class="number">1</span>)</span><br><span class="line">    <span class="comment"># 定义存分数的全局变量</span></span><br><span class="line">    <span class="keyword">global</span> score1</span><br><span class="line">    <span class="keyword">global</span> score2</span><br><span class="line">    score1 = score2 = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 初始化存放玩家键盘输入运动方向的变量</span></span><br><span class="line">    run_direction1 = <span class="string">"right"</span></span><br><span class="line">    run_direction2 = <span class="string">"up"</span></span><br><span class="line">    <span class="comment"># 初始化贪吃蛇运动方向的变量</span></span><br><span class="line">    run1 = run_direction1</span><br><span class="line">    run2 = run_direction2</span><br><span class="line">    <span class="comment"># 实例化贪吃蛇和食物对象</span></span><br><span class="line">    head1 = Snake(randint(<span class="number">0</span>, <span class="number">30</span>) * <span class="number">20</span>, randint(<span class="number">0</span>, <span class="number">20</span>) * <span class="number">20</span>)</span><br><span class="line">    head2 = Snake(randint(<span class="number">0</span>, <span class="number">30</span>) * <span class="number">20</span>, randint(<span class="number">0</span>, <span class="number">20</span>) * <span class="number">20</span>)</span><br><span class="line">    <span class="comment"># 实例化蛇身长度为2个单位</span></span><br><span class="line">    snake_body1 = [Snake(head1.x, head1.y + <span class="number">20</span>), Snake(head1.x, head1.y + <span class="number">40</span>)]</span><br><span class="line">    snake_body2 = [Snake(head2.x, head2.y + <span class="number">20</span>), Snake(head2.x, head2.y + <span class="number">40</span>)]</span><br><span class="line">    <span class="comment"># 实例化食物列表，列表随着其中食物被吃掉应该不断缩短</span></span><br><span class="line">    food_list = [Food(randint(<span class="number">0</span>, <span class="number">45</span>) * <span class="number">20</span>, randint(<span class="number">0</span>, <span class="number">28</span>) * <span class="number">20</span>, (randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>)))]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">24</span>):</span><br><span class="line">        food_list.append(Food(randint(<span class="number">0</span>, <span class="number">45</span>) * <span class="number">20</span>, randint(<span class="number">0</span>, <span class="number">28</span>) * <span class="number">20</span>, (randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>))))</span><br><span class="line">    <span class="comment"># 实例化单个食物，方便循环内生成单个新食物</span></span><br><span class="line">    food = Food(randint(<span class="number">0</span>, <span class="number">45</span>) * <span class="number">20</span>, randint(<span class="number">0</span>, <span class="number">28</span>) * <span class="number">20</span>, (randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>), randint(<span class="number">10</span>, <span class="number">255</span>)))</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        window.blit(background, (<span class="number">0</span>,<span class="number">0</span>))</span><br><span class="line">        <span class="comment"># 监听玩家键盘输入的运动方向值，并根据输入转为up、down、right或left，方便程序中调用</span></span><br><span class="line">        <span class="comment"># pygame.event.get()返回一个列表，存放本次game执行中程序遇到的一连串事件（按时间顺序依次存放）</span></span><br><span class="line">        <span class="keyword">for</span> event <span class="keyword">in</span> pygame.event.get():</span><br><span class="line">            <span class="comment"># pygame.QUIT事件是指用户点击窗口右上角的"×"</span></span><br><span class="line">            <span class="keyword">if</span> event.<span class="built_in">type</span> == pygame.QUIT:</span><br><span class="line">                <span class="comment"># 显示结果界面</span></span><br><span class="line">                show_end()</span><br><span class="line">            <span class="comment"># 若事件类型是按下键盘，分↑ ↓ ← →四种情况讨论</span></span><br><span class="line">            <span class="keyword">elif</span> event.<span class="built_in">type</span> == pygame.KEYDOWN:</span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘↑</span></span><br><span class="line">                <span class="comment"># key是键值，表示按下去的键值是什么</span></span><br><span class="line">                <span class="keyword">if</span> event.key == pygame.K_UP:</span><br><span class="line">                    run_direction2 = <span class="string">"up"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘↓</span></span><br><span class="line">                <span class="keyword">if</span> event.key == pygame.K_DOWN:</span><br><span class="line">                    run_direction2 = <span class="string">"down"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘←</span></span><br><span class="line">                <span class="keyword">if</span> event.key == pygame.K_LEFT:</span><br><span class="line">                    run_direction2 = <span class="string">"left"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘→</span></span><br><span class="line">                <span class="keyword">if</span> event.key == pygame.K_RIGHT:</span><br><span class="line">                    run_direction2 = <span class="string">"right"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘↑</span></span><br><span class="line">                <span class="keyword">if</span> event.key == <span class="built_in">ord</span>(<span class="string">'w'</span>):</span><br><span class="line">                    run_direction1 = <span class="string">"up"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘↓</span></span><br><span class="line">                <span class="keyword">if</span> event.key == <span class="built_in">ord</span>(<span class="string">'s'</span>):</span><br><span class="line">                    run_direction1 = <span class="string">"down"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘←</span></span><br><span class="line">                <span class="keyword">if</span> event.key == <span class="built_in">ord</span>(<span class="string">'a'</span>):</span><br><span class="line">                    run_direction1 = <span class="string">"left"</span></span><br><span class="line">                <span class="comment"># 若事件类型是按下键盘→</span></span><br><span class="line">                <span class="keyword">if</span> event.key == <span class="built_in">ord</span>(<span class="string">'d'</span>):</span><br><span class="line">                    run_direction1 = <span class="string">"right"</span></span><br><span class="line">        <span class="comment"># 绘制初始化的25个食物图像(24+1=25)</span></span><br><span class="line">        <span class="comment"># 随着该列表中的食物被吃掉，列表应该不断pop以清除已经被吃的事物</span></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> food_list:</span><br><span class="line">            draw_food(item)</span><br><span class="line">        <span class="comment"># 绘制被贪吃蛇吃掉后新增的食物图像</span></span><br><span class="line">        draw_food(food)</span><br><span class="line">        <span class="comment"># 绘制蛇头图像</span></span><br><span class="line">        <span class="comment"># 在绘制蛇头之前先检查是不是已经死亡，如果已死亡，则不绘制</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body1) != <span class="number">0</span>:</span><br><span class="line">            draw_snake(black, head1)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body2) != <span class="number">0</span>:</span><br><span class="line">            draw_snake(black, head2)</span><br><span class="line">        <span class="comment"># 绘制蛇身图像</span></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> snake_body1:</span><br><span class="line">            draw_snake(blue, item)</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> snake_body2:</span><br><span class="line">            draw_snake(green, item)</span><br><span class="line">        <span class="comment"># 插入蛇头位置到蛇身列表中</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body1) != <span class="number">0</span>:</span><br><span class="line">            snake_body1.insert(<span class="number">0</span>, Snake(head1.x, head1.y))</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body2) != <span class="number">0</span>:</span><br><span class="line">            snake_body2.insert(<span class="number">0</span>, Snake(head2.x, head2.y))</span><br><span class="line">        <span class="comment"># 判断贪吃蛇原运动方向(run)与玩家键盘输入的运动方向(run_direction)是否违反正常运动情况</span></span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"up"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction1 == <span class="string">"down"</span>:</span><br><span class="line">            run1 = run_direction1</span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"down"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction1 == <span class="string">"up"</span>:</span><br><span class="line">            run1 = run_direction1</span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"left"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction1 == <span class="string">"right"</span>:</span><br><span class="line">            run1 = run_direction1</span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"right"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction1 == <span class="string">"left"</span>:</span><br><span class="line">            run1 = run_direction1</span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"up"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction2 == <span class="string">"down"</span>:</span><br><span class="line">            run2 = run_direction2</span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"down"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction2 == <span class="string">"up"</span>:</span><br><span class="line">            run2 = run_direction2</span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"left"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction2 == <span class="string">"right"</span>:</span><br><span class="line">            run2 = run_direction2</span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"right"</span> <span class="keyword">and</span> <span class="keyword">not</span> run_direction2 == <span class="string">"left"</span>:</span><br><span class="line">            run2 = run_direction2</span><br><span class="line">        <span class="comment"># 根据玩家键入方向进行蛇头坐标的更新</span></span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"up"</span>:</span><br><span class="line">            head1.y -= <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"down"</span>:</span><br><span class="line">            head1.y += <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"left"</span>:</span><br><span class="line">            head1.x -= <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run1 == <span class="string">"right"</span>:</span><br><span class="line">            head1.x += <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"up"</span>:</span><br><span class="line">            head2.y -= <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"down"</span>:</span><br><span class="line">            head2.y += <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"left"</span>:</span><br><span class="line">            head2.x -= <span class="number">20</span></span><br><span class="line">        <span class="keyword">if</span> run2 == <span class="string">"right"</span>:</span><br><span class="line">            head2.x += <span class="number">20</span></span><br><span class="line">        <span class="comment"># 实现穿墙</span></span><br><span class="line">        <span class="comment"># 蛇头穿出窗体共有8种情况</span></span><br><span class="line">        <span class="keyword">if</span> head1.x &lt; <span class="number">0</span>:</span><br><span class="line">            head1.x = <span class="number">960</span></span><br><span class="line">        <span class="keyword">if</span> head1.x &gt; <span class="number">960</span>:</span><br><span class="line">            head1.x = <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> head1.y &lt; <span class="number">0</span>:</span><br><span class="line">            head1.y = <span class="number">600</span></span><br><span class="line">        <span class="keyword">if</span> head1.y &gt; <span class="number">600</span>:</span><br><span class="line">            head1.y = <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> head2.x &lt; <span class="number">0</span>:</span><br><span class="line">            head2.x = <span class="number">960</span></span><br><span class="line">        <span class="keyword">if</span> head2.x &gt; <span class="number">960</span>:</span><br><span class="line">            head2.x = <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> head2.y &lt; <span class="number">0</span>:</span><br><span class="line">            head2.y = <span class="number">600</span></span><br><span class="line">        <span class="keyword">if</span> head2.y &gt; <span class="number">600</span>:</span><br><span class="line">            head2.y = <span class="number">0</span></span><br><span class="line">        <span class="comment"># 定义死亡标志位</span></span><br><span class="line">        die_flag1 = die_flag2 = <span class="literal">False</span></span><br><span class="line">        <span class="keyword">for</span> body <span class="keyword">in</span> snake_body1[<span class="number">1</span>:]+snake_body2[<span class="number">1</span>:]:</span><br><span class="line">            <span class="keyword">if</span> head1.x == body.x <span class="keyword">and</span> head1.y == body.y:</span><br><span class="line">                die_flag1 = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">if</span> head2.x == body.x <span class="keyword">and</span> head2.y == body.y:</span><br><span class="line">                die_flag2 = <span class="literal">True</span></span><br><span class="line">        <span class="keyword">if</span> die_flag1 == <span class="literal">True</span>:</span><br><span class="line">            snake_body1.clear()</span><br><span class="line">        <span class="keyword">if</span> die_flag2 == <span class="literal">True</span>:</span><br><span class="line">            snake_body2.clear()</span><br><span class="line">        <span class="comment"># 若两条蛇都死亡</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body1) == <span class="number">0</span> <span class="keyword">and</span> <span class="built_in">len</span>(snake_body2) == <span class="number">0</span>:</span><br><span class="line">            show_end()</span><br><span class="line">        <span class="comment"># 判断蛇头和食物坐标，若相等，则加分，并生成新的食物</span></span><br><span class="line">        <span class="comment"># 定义标志，表明是否找到和蛇头相等的食物</span></span><br><span class="line">        <span class="keyword">global</span> flag1</span><br><span class="line">        <span class="keyword">global</span> flag2</span><br><span class="line">        flag1 = flag2 = <span class="number">0</span></span><br><span class="line">        <span class="comment"># 如果蛇头和食物重合</span></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> food_list:</span><br><span class="line">            <span class="comment"># 在蛇1没死且蛇头1和某一食物坐标相等的条件下</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(snake_body1) != <span class="number">0</span> <span class="keyword">and</span> (head1.x == item.x <span class="keyword">and</span> head1.y == item.y <span class="keyword">or</span> head1.x == food.x <span class="keyword">and</span> head1.y == food.y):</span><br><span class="line">                flag1 = <span class="number">1</span></span><br><span class="line">                score1 += <span class="number">1</span></span><br><span class="line">                <span class="comment"># 弹出被吃掉的这个食物</span></span><br><span class="line">                food_list.pop(food_list.index(item))</span><br><span class="line">                <span class="comment"># 再产生一个食物</span></span><br><span class="line">                food = new_food(head1)</span><br><span class="line">                <span class="comment"># 把新食物插入food_list，下一次循环中会更新绘制食物全体</span></span><br><span class="line">                food_list.append(food)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="comment"># 在蛇2没死的且蛇头2和某一食物坐标相等的条件下</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="built_in">len</span>(snake_body2) != <span class="number">0</span> <span class="keyword">and</span> head2.x == item.x <span class="keyword">and</span> head2.y == item.y <span class="keyword">or</span> head2.x == food.x <span class="keyword">and</span> head2.y == food.y:</span><br><span class="line">                flag2 = <span class="number">1</span></span><br><span class="line">                score2 += <span class="number">1</span></span><br><span class="line">                <span class="comment"># 弹出被吃掉的这个食物</span></span><br><span class="line">                food_list.pop(food_list.index(item))</span><br><span class="line">                <span class="comment"># 再产生一个食物</span></span><br><span class="line">                food = new_food(head2)</span><br><span class="line">                <span class="comment"># 把新食物插入food_list，下一次循环中会更新绘制食物全体</span></span><br><span class="line">                food_list.append(food)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="comment"># 蛇1必须没死，否则pop会引发异常</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body1) != <span class="number">0</span> <span class="keyword">and</span> flag1 == <span class="number">0</span>:</span><br><span class="line">            snake_body1.pop()</span><br><span class="line">        <span class="comment"># 蛇2必须没死，否则pop会引发异常</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(snake_body2) != <span class="number">0</span> <span class="keyword">and</span> flag2 == <span class="number">0</span>:</span><br><span class="line">            snake_body2.pop ()</span><br><span class="line">        font = pygame.font.SysFont(<span class="string">"simHei"</span>, <span class="number">25</span>)</span><br><span class="line">        mode_title1 = mode_title2 = font.render(<span class="string">'穿墙模式'</span>, <span class="literal">False</span>, grey)</span><br><span class="line">        socre_title1 = font.render(<span class="string">'得分: %s'</span> % score1, <span class="literal">False</span>, grey)</span><br><span class="line">        socre_title2 = font.render(<span class="string">'得分: %s'</span> % score2, <span class="literal">False</span>, grey)</span><br><span class="line">        window.blit(mode_title1, (<span class="number">50</span>, <span class="number">30</span>))</span><br><span class="line">        window.blit(socre_title1, (<span class="number">50</span>, <span class="number">65</span>))</span><br><span class="line">        window.blit(mode_title2, (<span class="number">800</span>, <span class="number">30</span>))</span><br><span class="line">        window.blit(socre_title2, (<span class="number">800</span>, <span class="number">65</span>))</span><br><span class="line">        <span class="comment"># 更新蛇头蛇身和食物的数据</span></span><br><span class="line">        pygame.display.update()</span><br><span class="line">        <span class="comment"># 通过帧率设置贪吃蛇速度</span></span><br><span class="line">        clock.tick(<span class="number">8</span>)</span><br></pre></td></tr></tbody></table></figure>
+<p>7.button()函数，功能：实现按钮样式设计和响应鼠标操作：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">button</span>(<span class="params">msg, x, y, w, h, ic, ac, action=<span class="literal">None</span></span>):</span></span><br><span class="line">    <span class="comment"># 获取鼠标位置</span></span><br><span class="line">    mouse = pygame.mouse.get_pos()</span><br><span class="line">    <span class="comment"># 获取鼠标点击情况</span></span><br><span class="line">    click = pygame.mouse.get_pressed()</span><br><span class="line">    <span class="keyword">if</span> x + w &gt; mouse[<span class="number">0</span>] &gt; x <span class="keyword">and</span> y + h &gt; mouse[<span class="number">1</span>] &gt; y:</span><br><span class="line">        pygame.draw.rect(window, ac, (x, y, w, h))</span><br><span class="line">        <span class="keyword">if</span> click[<span class="number">0</span>] == <span class="number">1</span> <span class="keyword">and</span> action != <span class="literal">None</span>:</span><br><span class="line">            action()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        pygame.draw.rect(window, ic, (x, y, w, h))</span><br><span class="line">    <span class="comment"># 设置按钮中的文字样式和居中对齐</span></span><br><span class="line">    font = pygame.font.SysFont(<span class="string">'simHei'</span>, <span class="number">20</span>)</span><br><span class="line">    smallfont = font.render(msg, <span class="literal">True</span>, white)</span><br><span class="line">    smallrect = smallfont.get_rect()</span><br><span class="line">    smallrect.center = ((x + (w / <span class="number">2</span>)), (y + (h / <span class="number">2</span>)))</span><br><span class="line">    window.blit(smallfont, smallrect)</span><br></pre></td></tr></tbody></table></figure>
+<p>8.into_game()函数，功能：实现游戏初始界面，选择模式：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">into_game</span>():</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        window.blit(init_background, (<span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">        <span class="keyword">for</span> event <span class="keyword">in</span> pygame.event.get():</span><br><span class="line">            <span class="keyword">if</span> event.<span class="built_in">type</span> == pygame.QUIT:</span><br><span class="line">                exit_end()</span><br><span class="line">        <span class="comment"># 设置字体</span></span><br><span class="line">        font = pygame.font.SysFont(<span class="string">"simHei"</span>, <span class="number">50</span>)</span><br><span class="line">        <span class="comment"># 初始界面显示文字</span></span><br><span class="line">        fontsurf = font.render(<span class="string">'欢迎来到贪吃蛇大冒险!'</span>, <span class="literal">True</span>, black)  <span class="comment"># 文字</span></span><br><span class="line">        fontrect = fontsurf.get_rect()</span><br><span class="line">        fontrect.center = ((<span class="number">480</span>), <span class="number">200</span>)</span><br><span class="line">        window.blit(fontsurf, fontrect)</span><br><span class="line">        button(<span class="string">"正常模式"</span>, <span class="number">370</span>, <span class="number">370</span>, <span class="number">200</span>, <span class="number">40</span>, blue, brightred, start_game_double)</span><br><span class="line">        button(<span class="string">"可穿墙模式"</span>, <span class="number">370</span>, <span class="number">420</span>, <span class="number">200</span>, <span class="number">40</span>, violte, brightred, start_kgame_double)</span><br><span class="line">        button(<span class="string">"退出游戏"</span>, <span class="number">370</span>, <span class="number">470</span>, <span class="number">200</span>, <span class="number">40</span>, red, brightred, exit_end)</span><br><span class="line">        pygame.display.update()</span><br><span class="line">        clock.tick(<span class="number">20</span>)</span><br></pre></td></tr></tbody></table></figure>
+<p>9.主函数，功能：初始化参数设定，进入游戏：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="comment"># 定义需要用到的颜色</span></span><br><span class="line">    white = (<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>)</span><br><span class="line">    red = (<span class="number">200</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">    green = (<span class="number">0</span>, <span class="number">128</span>, <span class="number">0</span>)</span><br><span class="line">    blue = (<span class="number">0</span>, <span class="number">202</span>, <span class="number">254</span>)</span><br><span class="line">    violte = (<span class="number">194</span>, <span class="number">8</span>, <span class="number">234</span>)</span><br><span class="line">    brightred = (<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">    brightgreen = (<span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>)</span><br><span class="line">    black = (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">    grey = (<span class="number">129</span>, <span class="number">131</span>, <span class="number">129</span>)</span><br><span class="line">    <span class="comment"># 设计窗口</span></span><br><span class="line">    window = pygame.display.set_mode((<span class="number">960</span>, <span class="number">600</span>))</span><br><span class="line">    <span class="comment"># 定义标题</span></span><br><span class="line">    pygame.display.set_caption(<span class="string">"贪吃蛇大冒险"</span>)</span><br><span class="line">    <span class="comment"># 定义背景图片</span></span><br><span class="line">    init_background = pygame.image.load(<span class="string">"image/init_bgimg.jpg"</span>)</span><br><span class="line">    background = pygame.image.load(<span class="string">"image/bgimg.jpg"</span>)</span><br><span class="line">    <span class="comment"># 背景音乐</span></span><br><span class="line">    pygame.mixer.init()</span><br><span class="line">    pygame.mixer.music.load(<span class="string">"background.mp3"</span>)</span><br><span class="line">    <span class="comment"># 创建时钟</span></span><br><span class="line">    clock = pygame.time.Clock()</span><br><span class="line">    <span class="comment"># 初始化，自检所有模块是否完整</span></span><br><span class="line">    pygame.init()</span><br><span class="line">    <span class="comment"># 初始界面</span></span><br><span class="line">    into_game()</span><br></pre></td></tr></tbody></table></figure>
+<p>  注：其中的图片、背景音乐需要自己找合适（尺寸要与窗口大小相适应）的，也可以参考我上传的资源<a target="_blank" rel="noopener" href="https://download.csdn.net/download/qq_45717425/21185692?spm=1001.2014.3001.5501">贪吃蛇双人版源码+图片+音乐</a>。<br>  附：<a target="_blank" rel="noopener" href="https://download.csdn.net/download/qq_45717425/21185971?spm=1001.2014.3001.5501">贪吃蛇 单人+双人整合版源码</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Silence Tang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://silence-tang.github.io/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8F%8C%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/" title="Python简易贪吃蛇小游戏（双人模式）">http://silence-tang.github.io/2021/09/06/Python简易贪吃蛇小游戏（双人模式）/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+              <a href="/tags/pygame/" rel="tag"><i class="fa fa-tag"></i> pygame</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/06/Python%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0-%E7%AE%80%E5%8D%95%E7%88%AC%E5%8F%96%E7%BD%91%E9%A1%B5%E6%95%B0%E6%8D%AE/" rel="prev" title="Python爬虫学习-简单爬取网页数据">
+      <i class="fa fa-chevron-left"></i> Python爬虫学习-简单爬取网页数据
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/06/%E7%BA%AF%E6%89%8B%E6%92%B8GitHub%E4%B8%AA%E4%BA%BA%E4%B8%BB%E9%A1%B5%E6%BA%90%E7%A0%81(%E6%97%A0%E6%A1%86%E6%9E%B6)/" rel="next" title="纯手撸GitHub个人主页源码(无框架)">
+      纯手撸GitHub个人主页源码(无框架) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%B8%B8%E6%88%8F%E8%AE%BE%E8%AE%A1%E8%A6%81%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">一、游戏设计要点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%B8%BB%E8%A6%81%E6%A8%A1%E5%9D%97"><span class="nav-number">2.</span> <span class="nav-text">二、主要模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%94%A8%E5%88%B0%E7%9A%84%E7%B1%BB"><span class="nav-number">3.</span> <span class="nav-text">三、用到的类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E4%B8%BB%E8%A6%81%E5%87%BD%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">四、主要函数</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Silence Tang"
+      src="/images/profile.jpg">
+  <p class="site-author-name" itemprop="name">Silence Tang</p>
+  <div class="site-description" itemprop="description">Wir müssen wissen. Wir werden wissen.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/silence-tang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;silence-tang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_45717425?spm=1001.2101.3001.5343" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_45717425?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank"><i class="fa fa-laptop fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/twilightfeng-xian" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;twilightfeng-xian" rel="noopener" target="_blank"><i class="fa fa-leaf fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.csdn.net/qq_45717425?spm=1001.2101.3001.5343" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_45717425?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank">My CSDN</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Silence Tang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'nYGyGfBTwVl3cyGSIfurP0nw-gzGzoHsz',
+      appKey     : 'FUVwrQPv4Vs824mpcvcbMgcd',
+      placeholder: "欢迎留言评论~",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
+</body>
+</html>

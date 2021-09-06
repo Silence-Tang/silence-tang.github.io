@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"silence-tang.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"always","padding":18,"offset":12},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="疫情宅家无事，就随便写一些随笔吧QwQ…  这是一篇介绍如何用Python实现简单爬取网页数据并导入MySQL中的数据库的文章。主要用到BeautifulSoup requests 和 pymysql。  以网页https:&#x2F;&#x2F;jbk.39.net&#x2F;mxyy&#x2F;jbzs&#x2F;为例，假设我们要爬取的部分数据如下图所示：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python爬虫学习-简单爬取网页数据">
+<meta property="og:url" content="http://silence-tang.github.io/2021/09/06/Python%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0-%E7%AE%80%E5%8D%95%E7%88%AC%E5%8F%96%E7%BD%91%E9%A1%B5%E6%95%B0%E6%8D%AE/index.html">
+<meta property="og:site_name" content="Silence&#39;s Blog">
+<meta property="og:description" content="疫情宅家无事，就随便写一些随笔吧QwQ…  这是一篇介绍如何用Python实现简单爬取网页数据并导入MySQL中的数据库的文章。主要用到BeautifulSoup requests 和 pymysql。  以网页https:&#x2F;&#x2F;jbk.39.net&#x2F;mxyy&#x2F;jbzs&#x2F;为例，假设我们要爬取的部分数据如下图所示：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/a9523000329d477daef3a8e680f221c2.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/48d51904be5b49ba8fec5a92411cef6a.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/86d0008764ed4f95b510278ab52e5e31.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/b0323e2e354d4c25a84fdbf468545377.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/8c27f130e7984caa80d3ebaa6cb19ce1.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2021-09-06T12:04:00.000Z">
+<meta property="article:modified_time" content="2021-09-06T12:06:03.672Z">
+<meta property="article:author" content="Silence Tang">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="爬虫">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/a9523000329d477daef3a8e680f221c2.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70">
+
+<link rel="canonical" href="http://silence-tang.github.io/2021/09/06/Python%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0-%E7%AE%80%E5%8D%95%E7%88%AC%E5%8F%96%E7%BD%91%E9%A1%B5%E6%95%B0%E6%8D%AE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Python爬虫学习-简单爬取网页数据 | Silence's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Silence's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Live for Die</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">32</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">32</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://silence-tang.github.io/2021/09/06/Python%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0-%E7%AE%80%E5%8D%95%E7%88%AC%E5%8F%96%E7%BD%91%E9%A1%B5%E6%95%B0%E6%8D%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/profile.jpg">
+      <meta itemprop="name" content="Silence Tang">
+      <meta itemprop="description" content="Wir müssen wissen. Wir werden wissen.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Silence's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python爬虫学习-简单爬取网页数据
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-06 20:04:00 / 修改时间：20:06:03" itemprop="dateCreated datePublished" datetime="2021-09-06T20:04:00+08:00">2021-09-06</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/06/Python%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0-%E7%AE%80%E5%8D%95%E7%88%AC%E5%8F%96%E7%BD%91%E9%A1%B5%E6%95%B0%E6%8D%AE/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/06/Python%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0-%E7%AE%80%E5%8D%95%E7%88%AC%E5%8F%96%E7%BD%91%E9%A1%B5%E6%95%B0%E6%8D%AE/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>  疫情宅家无事，就随便写一些随笔吧QwQ…</strong><br><strong>  这是一篇介绍如何用Python实现简单爬取网页数据并导入MySQL中的数据库的文章。主要用到BeautifulSoup requests 和 pymysql。</strong><br><strong>  以网页<a target="_blank" rel="noopener" href="https://jbk.39.net/mxyy/jbzs/">https://jbk.39.net/mxyy/jbzs/</a>为例，假设我们要爬取的部分数据如下图所示：</strong></p>
+<span id="more"></span>
+
+<p><img src="https://img-blog.csdnimg.cn/a9523000329d477daef3a8e680f221c2.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70" alt="![在这里插入图片描述](https://img-blog.csdnimg.cn/048e76ad710242a5b7737714b0f11f1b.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXz"></p>
+<h2 id="一、准备工作"><a href="#一、准备工作" class="headerlink" title="一、准备工作"></a>一、准备工作</h2><p>  1.导入BeautifulSoup和requests库：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> requests</span><br></pre></td></tr></tbody></table></figure>
+<p>  2.要想获得网页html内容，我们首先需要用requests库的.get()方法向该网页的服务器构造并发送一个请求。requests.get()方法需要传递两个参数，一个是网页的url，在这里显然是<a target="_blank" rel="noopener" href="https://jbk.39.net/mxyy/jbzs/%EF%BC%9B%E5%8F%A6%E4%B8%80%E4%B8%AA%E5%8F%82%E6%95%B0%E6%98%AF%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84header%E3%80%82%E6%9F%A5%E7%9C%8B%E6%96%B9%E6%B3%95%E5%A6%82%E4%B8%8B%EF%BC%9A">https://jbk.39.net/mxyy/jbzs/；另一个参数是浏览器的header。查看方法如下：</a><br><strong>  点击进入任意一个网页页面，按F12进入开发者模式，点击Network再刷新网页。在Network下的Name中任意点击一个资源，在右侧的Headers版块中下拉到最后，可以看见Request Headers参数列表最后有一个user-agent，其内容就是我们要找的浏览器headers参数值。</strong><br><img src="https://img-blog.csdnimg.cn/48d51904be5b49ba8fec5a92411cef6a.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>  有了url和headers我们就可以利用requests.get()向服务器发送请求了：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">headers = {<span class="string">'User-Agent'</span>:<span class="string">'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36'</span>}</span><br><span class="line">url = <span class="string">"https://jbk.39.net/mxyy/jbzs/"</span></span><br><span class="line">r = requests.get(url, headers = headers)</span><br></pre></td></tr></tbody></table></figure>
+<p>  使用requests.get()方法会先构造一个向服务器请求资源的url对象然后从服务器返回一个包含服务器资源的Response对象，其中包含从服务器返回的所有相关资源（自然也包括我们所需的html）。<br>  获取网页的html内容：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">html = r.content.decode(<span class="string">'utf-8'</span>, <span class="string">'ignore'</span>)</span><br></pre></td></tr></tbody></table></figure>
+<p>  解释：这里r.content返回“Content of the response, in bytes.”即返回HTTP响应内容（Response）的字节形式。因此我们需要使用.decode()方法来解码。这里ignore参数可要可不要，仅仅是为了忽略一些不重要的错误。<br>  有了html文本我们就可以把bs拿出来溜了：</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_page = BeautifulSoup(html, <span class="string">'lxml'</span>)</span><br></pre></td></tr></tbody></table></figure>
+<p>  其实这里得到的my_page和html内容几乎一致，那么为什么还要用bs再次解析html呢？答：Beautiful Soup 是用Python写的一个HTML/XML的解析器，它可以很好的处理不规范标记并生成剖析树(Parse Tree)。 它提供简单又常用的导航(Navigating)，搜索以及修改剖析树的操作，可以大大节省你的编程时间。也就是说，我们爬取数据需要用到的一些定位方法只有经由bs解析后返回的内容才能使用，单纯的html文本是不具备这样的方便快捷的方法的。</p>
+<h2 id="二、开始爬取数据"><a href="#二、开始爬取数据" class="headerlink" title="二、开始爬取数据"></a>二、开始爬取数据</h2><p>  <strong>在这里我们用到的方法主要是find  |  find_all  |  findAll  |      get_text() | text。</strong><br><strong>  1.find_all方法：</strong><br><img src="https://img-blog.csdnimg.cn/86d0008764ed4f95b510278ab52e5e31.png" alt="在这里插入图片描述">  功能是查找该页面元素的所有子元素并且将寻找到的符合查找结果的子元素以列表的形式返回。<br><strong>  2.find方法：</strong><br>  与find_all差不多，但是只返回第一个与查找条件匹配的子元素，且仅返回文本，不以列表形式返回。<br><strong>  3.get_text()和.text方法：</strong><br>  用来提取标签中的文本信息。<br><strong>  ps:get_text()和.text方法的区别：</strong><br><em><strong>  beautifulsoup中，对外接口，没有提供text这个属性，只有string这个属性值；beautifulsoup内部才有text这个属性，只供内部使用 –&gt; 如果你想要用text值，应该调用对应的get_text()；而你之所有能够直接用soup.text而没报错，应该是和python的class的property没有变成private有关系 –&gt;导致你外部也可以访问到这个，本身是只供内部使用的属性值。</strong></em><br>  <strong>4.具体实现示例：</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> tag <span class="keyword">in</span> my_page.find_all(<span class="string">'div'</span>, class_=<span class="string">'list_left'</span>):</span><br><span class="line">    sub_tag = tag.find(<span class="string">'ul'</span>,class_=<span class="string">"disease_basic"</span>) </span><br><span class="line">    my_span = sub_tag.findAll(<span class="string">'span'</span>)</span><br><span class="line">    <span class="comment">#my_span可以认为是一个list</span></span><br><span class="line">    is_yibao = my_span[<span class="number">1</span>].text </span><br><span class="line">    othername = my_span[<span class="number">3</span>].text </span><br><span class="line">    fbbw = my_span[<span class="number">5</span>].text</span><br><span class="line">    is_infect = my_span[<span class="number">7</span>].text </span><br><span class="line">    dfrq = my_span[<span class="number">9</span>].text </span><br><span class="line">    my_a = sub_tag.findAll(<span class="string">'a'</span>)</span><br><span class="line">    fbbw = my_a[<span class="number">0</span>].text</span><br><span class="line">    <span class="comment">#注：也可用.contents[0]或者.get_text()</span></span><br></pre></td></tr></tbody></table></figure>
+<p>  用以实现爬取“是否属于医保”等条目冒号后面的内容。<br><img src="https://img-blog.csdnimg.cn/b0323e2e354d4c25a84fdbf468545377.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><strong>  如何查找find_all()参数值？</strong><br>  选中需要查找的内容并右键单击，选择“检查”，进入开发者模式，可看到相关内容的html代码如下图所示：<br><img src="https://img-blog.csdnimg.cn/8c27f130e7984caa80d3ebaa6cb19ce1.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>  可见，我们想爬的内容首先在一个class属性为“list_left”的div标签内—&gt;在该div标签内又可发现想爬的内容在class属性为“disease_basic”的列表元素ul标签内—&gt;在ul标签内可以发现我们想要的内容就分别藏在几个span标签内。</p>
+<h2 id="三、完整代码"><a href="#三、完整代码" class="headerlink" title="三、完整代码"></a>三、完整代码</h2><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding = utf-8</span></span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">headers = {<span class="string">'User-Agent'</span>:<span class="string">'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36'</span>}</span><br><span class="line">url = <span class="string">"https://jbk.39.net/mxyy/jbzs/"</span></span><br><span class="line">r = requests.get(url, headers = headers)</span><br><span class="line">html = r.content.decode(<span class="string">'utf-8'</span>, <span class="string">'ignore'</span>)</span><br><span class="line">my_page = BeautifulSoup(html, <span class="string">'lxml'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> tag <span class="keyword">in</span> my_page.find_all(<span class="string">'div'</span>, class_=<span class="string">'disease'</span>):   </span><br><span class="line">    disease = tag.find(<span class="string">'h1'</span>).get_text()</span><br><span class="line">    disease_name = disease</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> tag <span class="keyword">in</span> my_page.find_all(<span class="string">'p'</span>, class_=<span class="string">'introduction'</span>):</span><br><span class="line">    introduction = tag.get_text()</span><br><span class="line">    disease_introduction = introduction</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> tag <span class="keyword">in</span> my_page.find_all(<span class="string">'div'</span>, class_=<span class="string">'list_left'</span>):</span><br><span class="line">    sub_tag = tag.find(<span class="string">'ul'</span>,class_=<span class="string">"disease_basic"</span>) </span><br><span class="line">    my_span = sub_tag.findAll(<span class="string">'span'</span>)</span><br><span class="line">    <span class="comment">#my_span is a list</span></span><br><span class="line">    is_yibao = my_span[<span class="number">1</span>].text    <span class="comment">#是否医保</span></span><br><span class="line">    othername = my_span[<span class="number">3</span>].text   <span class="comment">#别名</span></span><br><span class="line">    fbbw = my_span[<span class="number">5</span>].text        <span class="comment">#发病部位</span></span><br><span class="line">    is_infect = my_span[<span class="number">7</span>].text   <span class="comment">#传染性</span></span><br><span class="line">    dfrq = my_span[<span class="number">9</span>].text        <span class="comment">#多发人群</span></span><br><span class="line">    my_a = sub_tag.findAll(<span class="string">'a'</span>)</span><br><span class="line">    xgzz = my_a[<span class="number">2</span>].text+<span class="string">' '</span>+my_a[<span class="number">3</span>].text+<span class="string">' '</span>+my_a[<span class="number">4</span>].text  <span class="comment">#相关症状</span></span><br><span class="line">    <span class="comment">#ps: .contents[0] or .get_text() is also accepted</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Some tests:</span></span><br><span class="line"><span class="comment"># print(html)</span></span><br><span class="line"><span class="comment"># print(my_page)</span></span><br><span class="line"><span class="comment"># print(sub_tag)</span></span><br><span class="line"><span class="comment"># print(xgzz)</span></span><br><span class="line"><span class="comment"># print(my_span)</span></span><br><span class="line"><span class="comment"># print(my_span[1])</span></span><br></pre></td></tr></tbody></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Silence Tang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://silence-tang.github.io/2021/09/06/Python%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0-%E7%AE%80%E5%8D%95%E7%88%AC%E5%8F%96%E7%BD%91%E9%A1%B5%E6%95%B0%E6%8D%AE/" title="Python爬虫学习-简单爬取网页数据">http://silence-tang.github.io/2021/09/06/Python爬虫学习-简单爬取网页数据/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+              <a href="/tags/%E7%88%AC%E8%99%AB/" rel="tag"><i class="fa fa-tag"></i> 爬虫</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8D%95%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/" rel="prev" title="Python简易贪吃蛇小游戏（单人模式）">
+      <i class="fa fa-chevron-left"></i> Python简易贪吃蛇小游戏（单人模式）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8F%8C%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/" rel="next" title="Python简易贪吃蛇小游戏（双人模式）">
+      Python简易贪吃蛇小游戏（双人模式） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">一、准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%BC%80%E5%A7%8B%E7%88%AC%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="nav-number">2.</span> <span class="nav-text">二、开始爬取数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">三、完整代码</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Silence Tang"
+      src="/images/profile.jpg">
+  <p class="site-author-name" itemprop="name">Silence Tang</p>
+  <div class="site-description" itemprop="description">Wir müssen wissen. Wir werden wissen.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/silence-tang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;silence-tang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_45717425?spm=1001.2101.3001.5343" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_45717425?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank"><i class="fa fa-laptop fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/twilightfeng-xian" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;twilightfeng-xian" rel="noopener" target="_blank"><i class="fa fa-leaf fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.csdn.net/qq_45717425?spm=1001.2101.3001.5343" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_45717425?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank">My CSDN</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Silence Tang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'nYGyGfBTwVl3cyGSIfurP0nw-gzGzoHsz',
+      appKey     : 'FUVwrQPv4Vs824mpcvcbMgcd',
+      placeholder: "欢迎留言评论~",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
+</body>
+</html>

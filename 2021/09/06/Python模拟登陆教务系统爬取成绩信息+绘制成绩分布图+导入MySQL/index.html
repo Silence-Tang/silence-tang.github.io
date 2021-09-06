@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"silence-tang.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"always","padding":18,"offset":12},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="这是一篇介绍如何通过Python实现模拟登陆学校教务系统并爬取成绩相关信息（学期,课程名,总成绩,课程性质,学分）然后绘制成绩分布折线图最后导入MySQL数据库中的文章。  为了利用充分利用selenium的功能和成功爬取数据，需要有前置的html、css、简单爬虫的相关知识。  说明：我学校的成绩查询页面是通过加载js框架进而动态实时加载显示表格及数据的，如果仅仅是用一般的爬虫方法直接爬取页">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python模拟登陆教务系统爬取成绩信息+绘制成绩分布图+导入MySQL">
+<meta property="og:url" content="http://silence-tang.github.io/2021/09/06/Python%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E7%88%AC%E5%8F%96%E6%88%90%E7%BB%A9%E4%BF%A1%E6%81%AF+%E7%BB%98%E5%88%B6%E6%88%90%E7%BB%A9%E5%88%86%E5%B8%83%E5%9B%BE+%E5%AF%BC%E5%85%A5MySQL/index.html">
+<meta property="og:site_name" content="Silence&#39;s Blog">
+<meta property="og:description" content="这是一篇介绍如何通过Python实现模拟登陆学校教务系统并爬取成绩相关信息（学期,课程名,总成绩,课程性质,学分）然后绘制成绩分布折线图最后导入MySQL数据库中的文章。  为了利用充分利用selenium的功能和成功爬取数据，需要有前置的html、css、简单爬虫的相关知识。  说明：我学校的成绩查询页面是通过加载js框架进而动态实时加载显示表格及数据的，如果仅仅是用一般的爬虫方法直接爬取页">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/a5ec5272b73d42b09d2e4b10b80c61df.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/25ec7dcdf98e41e4ae0e8331c8491556.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/e6254d3dbeca4679afbc311793937d30.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/b6b1747bb364403d8b27d9632ed6b3b6.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20ecfb3e5ee34cc5948115d0b76f5527.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/797cbf677438406389f3259efc571170.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="article:published_time" content="2021-09-06T11:29:00.000Z">
+<meta property="article:modified_time" content="2021-09-06T11:52:37.301Z">
+<meta property="article:author" content="Silence Tang">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="selenium">
+<meta property="article:tag" content="爬虫">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/a5ec5272b73d42b09d2e4b10b80c61df.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16">
+
+<link rel="canonical" href="http://silence-tang.github.io/2021/09/06/Python%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E7%88%AC%E5%8F%96%E6%88%90%E7%BB%A9%E4%BF%A1%E6%81%AF+%E7%BB%98%E5%88%B6%E6%88%90%E7%BB%A9%E5%88%86%E5%B8%83%E5%9B%BE+%E5%AF%BC%E5%85%A5MySQL/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Python模拟登陆教务系统爬取成绩信息+绘制成绩分布图+导入MySQL | Silence's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Silence's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Live for Die</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">32</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">32</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://silence-tang.github.io/2021/09/06/Python%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E7%88%AC%E5%8F%96%E6%88%90%E7%BB%A9%E4%BF%A1%E6%81%AF+%E7%BB%98%E5%88%B6%E6%88%90%E7%BB%A9%E5%88%86%E5%B8%83%E5%9B%BE+%E5%AF%BC%E5%85%A5MySQL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/profile.jpg">
+      <meta itemprop="name" content="Silence Tang">
+      <meta itemprop="description" content="Wir müssen wissen. Wir werden wissen.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Silence's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python模拟登陆教务系统爬取成绩信息+绘制成绩分布图+导入MySQL
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-06 19:29:00 / 修改时间：19:52:37" itemprop="dateCreated datePublished" datetime="2021-09-06T19:29:00+08:00">2021-09-06</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/06/Python%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E7%88%AC%E5%8F%96%E6%88%90%E7%BB%A9%E4%BF%A1%E6%81%AF+%E7%BB%98%E5%88%B6%E6%88%90%E7%BB%A9%E5%88%86%E5%B8%83%E5%9B%BE+%E5%AF%BC%E5%85%A5MySQL/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/06/Python%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E7%88%AC%E5%8F%96%E6%88%90%E7%BB%A9%E4%BF%A1%E6%81%AF+%E7%BB%98%E5%88%B6%E6%88%90%E7%BB%A9%E5%88%86%E5%B8%83%E5%9B%BE+%E5%AF%BC%E5%85%A5MySQL/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>  这是一篇介绍如何通过Python实现模拟登陆学校教务系统并爬取成绩相关信息（学期,课程名,总成绩,课程性质,学分）然后绘制成绩分布折线图最后导入MySQL数据库中的文章。<br>  为了利用充分利用selenium的功能和成功爬取数据，需要有前置的html、css、简单爬虫的相关知识。<br>  说明：我学校的成绩查询页面是通过加载js框架进而动态实时加载显示表格及数据的，如果仅仅是用一般的爬虫方法直接爬取页面信息，是不能成功的，因为那样是直接获取网页源码，其中并没有成绩数据。当然，采用某些爬虫方法肯定也能实现爬取js动态网页，但是我为了简单起见，直接用了selenium模拟登陆系统然后爬取信息。</p>
+<span id="more"></span>
+
+<h2 id="一、导入主要模块"><a href="#一、导入主要模块" class="headerlink" title="一、导入主要模块"></a>一、导入主要模块</h2><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup </span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver <span class="keyword">import</span> ActionChains</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.keys <span class="keyword">import</span> Keys</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> pymysql</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="二、利用selenium模拟登陆教务系统"><a href="#二、利用selenium模拟登陆教务系统" class="headerlink" title="二、利用selenium模拟登陆教务系统"></a>二、利用selenium模拟登陆教务系统</h2><p>  1.首先给出系统登陆页面url和成绩查询页面url（方便登陆成功后直接跳转，省去了鼠标点击相关链接的操作）</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给出所需的url</span></span><br><span class="line">url_login_page = (<span class="string">"你学校的教务系统登录页面url"</span>)</span><br><span class="line">url_cjcx=(<span class="string">"成绩查询页面url"</span>)</span><br></pre></td></tr></tbody></table></figure>
+<p>  2.打开系统登录页面</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动Chorme驱动，开始模拟（不能用静默模式启动）</span></span><br><span class="line">option = webdriver.ChromeOptions()</span><br><span class="line"><span class="comment"># 不加载图片，提高访问速度</span></span><br><span class="line">option.add_argument(<span class="string">'blink-settings=imagesEnabled=false'</span>)</span><br><span class="line">driver = webdriver.Chrome(chrome_options=option)</span><br><span class="line">driver.maximize_window()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"正在访问......"</span>)</span><br><span class="line">driver.get(url_login_page)</span><br></pre></td></tr></tbody></table></figure>
+<p>  3.模拟输入账号密码并点击登陆按钮<br>  这里需要你自己用F12去查看自己学校系统登陆页面的网页元素然后找到账号密码输入框、登录按钮的元素名称（这里我通过find_element_by_id找到了所需的输入框及按钮）<br><img src="https://img-blog.csdnimg.cn/a5ec5272b73d42b09d2e4b10b80c61df.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 自动输入账号密码</span></span><br><span class="line">driver.find_element_by_id(<span class="string">"username"</span>).send_keys(<span class="string">"你的学号"</span>)</span><br><span class="line">driver.find_element_by_id(<span class="string">"password"</span>).send_keys(<span class="string">"你的密码"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 找到并点击登录按钮，实现登录</span></span><br><span class="line">login_button = driver.find_element_by_id(<span class="string">"login_submit"</span>)</span><br><span class="line">actions = ActionChains(driver)</span><br><span class="line">actions.key_down(Keys.CONTROL).click(login_button).key_up(Keys.CONTROL).perform()</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="三、爬取成绩信息"><a href="#三、爬取成绩信息" class="headerlink" title="三、爬取成绩信息"></a>三、爬取成绩信息</h2><p>  1.在新页面打开成绩查询页面</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打开新的地址</span></span><br><span class="line">driver.switch_to.window(driver.window_handles[-<span class="number">1</span>])</span><br><span class="line">driver.get(url_cjcx)</span><br></pre></td></tr></tbody></table></figure>
+<p>  2.等待成绩查询页面加载完毕<br>我学校的查询页面与学校数据库对接较缓慢，所以我设置了10s等待时间，否则页面加载不出来会报错</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 等待页面加载完毕</span></span><br><span class="line">time.sleep(<span class="number">10</span>)</span><br></pre></td></tr></tbody></table></figure>
+<p>  3.找到“每页显示50条数据”的按钮并点击<br>这里我想点击“每页显示50条数据”按钮是因为这样可以直接爬取所有数据而不需要点击“下一页”按钮。同样地，这里根据个人需要调整参数即可<br><img src="https://img-blog.csdnimg.cn/25ec7dcdf98e41e4ae0e8331c8491556.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 找到每页显示数目选择框并点击"50"</span></span><br><span class="line">driver.find_element_by_class_name(<span class="string">"bh-pull-right.jqx-widget.jqx-dropdownlist-state-normal.jqx-rc-all.jqx-fill-state-normal"</span>).click()</span><br><span class="line">time.sleep(<span class="number">0.5</span>)</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//span[text()='50']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 等待页面加载完毕</span></span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br></pre></td></tr></tbody></table></figure>
+<p>  4.爬取成绩查询页面的信息<br>这里采用的方法是先用driver.page_source+BeautifulSoup的方法获取当前页面的源码然后采用一般的爬虫方法获取相关信息<br><img src="https://img-blog.csdnimg.cn/e6254d3dbeca4679afbc311793937d30.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 准备爬取成绩查询页面的信息</span></span><br><span class="line">data = driver.page_source</span><br><span class="line">soup = BeautifulSoup(data, <span class="string">'lxml'</span>)</span><br><span class="line">trs = soup.find_all(<span class="string">"tr"</span>)</span><br><span class="line">total_container = []</span><br><span class="line"><span class="keyword">for</span> tr <span class="keyword">in</span> trs:</span><br><span class="line">    row_container = []</span><br><span class="line">    <span class="keyword">for</span> span <span class="keyword">in</span> tr:</span><br><span class="line">        row_container.append(span.string)</span><br><span class="line">    total_container.append(row_container)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化score subjects列表</span></span><br><span class="line">score = []</span><br><span class="line">subjects = []</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出最近两学期成绩数据</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"近两学期所有科目成绩如下："</span>)</span><br><span class="line">subject_num = <span class="built_in">int</span>(<span class="built_in">len</span>(total_container)/<span class="number">2</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,subject_num+<span class="number">1</span>):</span><br><span class="line">    <span class="built_in">print</span>(total_container[i-<span class="number">1</span>][<span class="number">1</span>], total_container[i-<span class="number">1</span>][<span class="number">2</span>], total_container[i-<span class="number">1</span>][<span class="number">6</span>], total_container[i-<span class="number">1</span>][<span class="number">9</span>], total_container[i-<span class="number">1</span>][<span class="number">11</span>])</span><br><span class="line">    subjects.append(total_container[i-<span class="number">1</span>][<span class="number">2</span>])</span><br><span class="line">    score.append(total_container[i-<span class="number">1</span>][<span class="number">6</span>])</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"\n原始成绩："</span>,score,<span class="string">"\n"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 规范化成绩</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,subject_num+<span class="number">1</span>):</span><br><span class="line">    <span class="keyword">if</span> score[i-<span class="number">1</span>] == <span class="string">'优秀'</span> <span class="keyword">or</span> score[i-<span class="number">1</span>] ==<span class="string">'621'</span>:</span><br><span class="line">        score[i-<span class="number">1</span>] = <span class="number">95</span></span><br><span class="line">    <span class="keyword">elif</span> score[i-<span class="number">1</span>] == <span class="string">'良好'</span>:</span><br><span class="line">        score[i-<span class="number">1</span>] = <span class="number">85</span></span><br><span class="line">    <span class="keyword">elif</span> score[i-<span class="number">1</span>] == <span class="string">'通过'</span>:</span><br><span class="line">        score[i-<span class="number">1</span>] = <span class="number">75</span></span><br><span class="line">    <span class="keyword">elif</span> score[i-<span class="number">1</span>] == <span class="literal">None</span>:</span><br><span class="line">        score[i-<span class="number">1</span>] = <span class="number">98</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        score[i-<span class="number">1</span>] = <span class="built_in">int</span>(score[i-<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"科目："</span>,subjects,<span class="string">"\n"</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"规范化后的成绩："</span>,score)</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/b6b1747bb364403d8b27d9632ed6b3b6.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<h2 id="四、绘制成绩分布统计图"><a href="#四、绘制成绩分布统计图" class="headerlink" title="四、绘制成绩分布统计图"></a>四、绘制成绩分布统计图</h2><p>  我们采用matplotlib.pyplot画图</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 绘图</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"\n正在绘制成绩分布折线图..."</span>)</span><br><span class="line">x = <span class="built_in">range</span>(subject_num)</span><br><span class="line"><span class="comment"># plt.xticks(x,subjects)  # 可以设置坐标字</span></span><br><span class="line">plt.plot(x, score)</span><br><span class="line">plt.xlabel(<span class="string">"Subject(The xth)"</span>) <span class="comment">#X轴标签</span></span><br><span class="line">plt.ylabel(<span class="string">"Score"</span>) <span class="comment">#Y轴标签</span></span><br><span class="line">plt.title(<span class="string">'Score Distribution Chart'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/20ecfb3e5ee34cc5948115d0b76f5527.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<h2 id="五、将数据导入MySQL"><a href="#五、将数据导入MySQL" class="headerlink" title="五、将数据导入MySQL"></a>五、将数据导入MySQL</h2><figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 写入MySQL</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"\n正在连接MySQL服务\n..."</span>)</span><br><span class="line"><span class="comment"># 创建与测试数据库的连接</span></span><br><span class="line">conn = pymysql.connect(host=<span class="string">'localhost'</span>,user=<span class="string">"root"</span>,password=<span class="string">"你的密码"</span>,database=<span class="string">"score_db"</span>)</span><br><span class="line"><span class="comment"># 输出创建的连接对象的信息</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"连接成功!\n连接对象的基本信息如下："</span>)</span><br><span class="line"><span class="built_in">print</span> (conn)</span><br><span class="line"><span class="built_in">print</span> (<span class="built_in">type</span>(conn))</span><br><span class="line">cursor = conn.cursor()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"开始向数据表插入爬取的内容..."</span>)</span><br><span class="line">sql1 = (<span class="string">"INSERT INTO score_table_test(学期,课程名,总成绩,课程性质,学分) VALUES(%s,%s,%s,%s,%s)"</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,subject_num+<span class="number">1</span>):</span><br><span class="line">    <span class="comment"># param中是实际的表格数据</span></span><br><span class="line">    param = (total_container[i-<span class="number">1</span>][<span class="number">1</span>], total_container[i-<span class="number">1</span>][<span class="number">2</span>], total_container[i-<span class="number">1</span>][<span class="number">6</span>], total_container[i-<span class="number">1</span>][<span class="number">9</span>], total_container[i-<span class="number">1</span>][<span class="number">11</span>])</span><br><span class="line">    cursor.execute(sql1, param)</span><br><span class="line">    conn.commit()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"插入成功!"</span>)</span><br><span class="line"><span class="comment"># 清空表格内容</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"正在清空当前表格内容..."</span>)</span><br><span class="line">sql2 = (<span class="string">"truncate table score_table_test"</span>)</span><br><span class="line">cursor.execute(sql2)</span><br><span class="line">conn.commit()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"删除成功！"</span>)</span><br><span class="line"><span class="comment"># 关闭指针对象和连接对象</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"准备断开数据库连接...."</span>)</span><br><span class="line">cursor.close()</span><br><span class="line">conn.close()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"已成功断开连接！"</span>)</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/797cbf677438406389f3259efc571170.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Silence Tang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://silence-tang.github.io/2021/09/06/Python%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E7%88%AC%E5%8F%96%E6%88%90%E7%BB%A9%E4%BF%A1%E6%81%AF+%E7%BB%98%E5%88%B6%E6%88%90%E7%BB%A9%E5%88%86%E5%B8%83%E5%9B%BE+%E5%AF%BC%E5%85%A5MySQL/" title="Python模拟登陆教务系统爬取成绩信息+绘制成绩分布图+导入MySQL">http://silence-tang.github.io/2021/09/06/Python模拟登陆教务系统爬取成绩信息+绘制成绩分布图+导入MySQL/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+              <a href="/tags/selenium/" rel="tag"><i class="fa fa-tag"></i> selenium</a>
+              <a href="/tags/%E7%88%AC%E8%99%AB/" rel="tag"><i class="fa fa-tag"></i> 爬虫</a>
+              <a href="/tags/MySQL/" rel="tag"><i class="fa fa-tag"></i> MySQL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/06/Python%E6%9E%84%E9%80%A0%E4%BB%A3%E7%90%86ip%E6%B1%A0%E6%8F%90%E9%AB%98%E8%AE%BF%E9%97%AE%E9%87%8F/" rel="prev" title="Python构造代理ip池提高访问量">
+      <i class="fa fa-chevron-left"></i> Python构造代理ip池提高访问量
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/06/%E4%B8%80%E6%96%87%E6%8E%8C%E6%8F%A1Python%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8%E6%93%8D%E4%BD%9C/" rel="next" title="一文掌握Python数据分析入门操作">
+      一文掌握Python数据分析入门操作 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AF%BC%E5%85%A5%E4%B8%BB%E8%A6%81%E6%A8%A1%E5%9D%97"><span class="nav-number">1.</span> <span class="nav-text">一、导入主要模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%88%A9%E7%94%A8selenium%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.</span> <span class="nav-text">二、利用selenium模拟登陆教务系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%88%AC%E5%8F%96%E6%88%90%E7%BB%A9%E4%BF%A1%E6%81%AF"><span class="nav-number">3.</span> <span class="nav-text">三、爬取成绩信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%BB%98%E5%88%B6%E6%88%90%E7%BB%A9%E5%88%86%E5%B8%83%E7%BB%9F%E8%AE%A1%E5%9B%BE"><span class="nav-number">4.</span> <span class="nav-text">四、绘制成绩分布统计图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%B0%86%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5MySQL"><span class="nav-number">5.</span> <span class="nav-text">五、将数据导入MySQL</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Silence Tang"
+      src="/images/profile.jpg">
+  <p class="site-author-name" itemprop="name">Silence Tang</p>
+  <div class="site-description" itemprop="description">Wir müssen wissen. Wir werden wissen.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/silence-tang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;silence-tang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_45717425?spm=1001.2101.3001.5343" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_45717425?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank"><i class="fa fa-laptop fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/twilightfeng-xian" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;twilightfeng-xian" rel="noopener" target="_blank"><i class="fa fa-leaf fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.csdn.net/qq_45717425?spm=1001.2101.3001.5343" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_45717425?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank">My CSDN</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Silence Tang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'nYGyGfBTwVl3cyGSIfurP0nw-gzGzoHsz',
+      appKey     : 'FUVwrQPv4Vs824mpcvcbMgcd',
+      placeholder: "欢迎留言评论~",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"silence-tang.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"always","padding":18,"offset":12},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="学校思政实践要收集1500份问卷，待在家里无聊就简单写了个用selenium模块实现的自动填写问卷星问卷的小程序。  基本思路很简单：  1.先打开问卷的网址，按F12进开发者模式分析页面HTML，找到题目的选项按钮对应的HTML代码（例如：Q1的四个选项按钮都在a标签内，且rel属性值分别为q1_1,q1_2,q1_3,q1_4）；  2.在py中用slenium的find_element_">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python selenium自动化刷问卷+绕过智能验证">
+<meta property="og:url" content="http://silence-tang.github.io/2021/09/06/Python%20selenium%E8%87%AA%E5%8A%A8%E5%8C%96%E5%88%B7%E9%97%AE%E5%8D%B7+%E7%BB%95%E8%BF%87%E6%99%BA%E8%83%BD%E9%AA%8C%E8%AF%81/index.html">
+<meta property="og:site_name" content="Silence&#39;s Blog">
+<meta property="og:description" content="学校思政实践要收集1500份问卷，待在家里无聊就简单写了个用selenium模块实现的自动填写问卷星问卷的小程序。  基本思路很简单：  1.先打开问卷的网址，按F12进开发者模式分析页面HTML，找到题目的选项按钮对应的HTML代码（例如：Q1的四个选项按钮都在a标签内，且rel属性值分别为q1_1,q1_2,q1_3,q1_4）；  2.在py中用slenium的find_element_">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2c77d8602b6243f6a9acda28dd0ce095.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/79fe4c56f1dd45b88527aed512e16998.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/eebda54e45e545cd8f3ad7f0730b1190.gif">
+<meta property="article:published_time" content="2021-09-06T11:58:00.000Z">
+<meta property="article:modified_time" content="2021-09-06T11:59:14.675Z">
+<meta property="article:author" content="Silence Tang">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="selenium">
+<meta property="article:tag" content="爬虫">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/2c77d8602b6243f6a9acda28dd0ce095.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70">
+
+<link rel="canonical" href="http://silence-tang.github.io/2021/09/06/Python%20selenium%E8%87%AA%E5%8A%A8%E5%8C%96%E5%88%B7%E9%97%AE%E5%8D%B7+%E7%BB%95%E8%BF%87%E6%99%BA%E8%83%BD%E9%AA%8C%E8%AF%81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Python selenium自动化刷问卷+绕过智能验证 | Silence's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Silence's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Live for Die</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">32</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">32</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://silence-tang.github.io/2021/09/06/Python%20selenium%E8%87%AA%E5%8A%A8%E5%8C%96%E5%88%B7%E9%97%AE%E5%8D%B7+%E7%BB%95%E8%BF%87%E6%99%BA%E8%83%BD%E9%AA%8C%E8%AF%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/profile.jpg">
+      <meta itemprop="name" content="Silence Tang">
+      <meta itemprop="description" content="Wir müssen wissen. Wir werden wissen.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Silence's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python selenium自动化刷问卷+绕过智能验证
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-06 19:58:00 / 修改时间：19:59:14" itemprop="dateCreated datePublished" datetime="2021-09-06T19:58:00+08:00">2021-09-06</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/06/Python%20selenium%E8%87%AA%E5%8A%A8%E5%8C%96%E5%88%B7%E9%97%AE%E5%8D%B7+%E7%BB%95%E8%BF%87%E6%99%BA%E8%83%BD%E9%AA%8C%E8%AF%81/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/06/Python%20selenium%E8%87%AA%E5%8A%A8%E5%8C%96%E5%88%B7%E9%97%AE%E5%8D%B7+%E7%BB%95%E8%BF%87%E6%99%BA%E8%83%BD%E9%AA%8C%E8%AF%81/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>  <strong>学校思政实践要收集1500份问卷，待在家里无聊就简单写了个用selenium模块实现的自动填写问卷星问卷的小程序。</strong><br>  <strong>基本思路很简单</strong>：<br>  1.先打开问卷的网址，按F12进开发者模式分析页面HTML，找到题目的选项按钮对应的HTML代码（例如：Q1的四个选项按钮都在a标签内，且rel属性值分别为q1_1,q1_2,q1_3,q1_4）；<br>  2.在py中用slenium的find_element_by_xpath+click()方法实现模拟点击按钮，例如：</p>
+<span id="more"></span>
+
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">q1 = random()</span><br><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt;= q1 &lt;= <span class="number">0.5</span>:</span><br><span class="line">    <span class="comment"># 通过属性定位元素</span></span><br><span class="line">    <span class="comment"># q1_1是Q1的第1个按钮</span></span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q1_1']"</span>).click()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q1_2']"</span>).click()</span><br></pre></td></tr></tbody></table></figure>
+<p>  3.若想模拟人的选择偏好，就用随机数区间+if语句控制，无非就是多写几条语句；<br>  4.最后填写完问卷提交也是一样的，find_element找到提交按钮的html对应代码再click()。此时要注意——在py中用selenium模拟填写的问卷最后点击提交必定触发智能验证框：<br><img src="https://img-blog.csdnimg.cn/2c77d8602b6243f6a9acda28dd0ce095.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>  <strong>这时你无论用人手点击或者是再模拟点击都是没法验证成功的</strong>。<br><img src="https://img-blog.csdnimg.cn/79fe4c56f1dd45b88527aed512e16998.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>  这是因为问卷xing网页有反爬机制会检查你是不是通过selenium访问网页的。大多数情况下，<em><strong>检测基本原理是检测当前浏览器窗口下的window.navigator对象是否包含webdriver这个属性。因为在正常使用浏览器的情况下，这个属性是undefined，然而一旦我们使用了selenium，selenium会给window.navigator设置webdriver属性。很多网站就通过JS判断如果webdrive 属性存在，那就直接屏蔽。</strong></em></p>
+<p>  网上搜了一下，<strong>基本看着都是用pyppeteer解决反爬的方法，安装python第三方库asyncio、pyppeteer和pyppeteer_stealth</strong>然后一顿操作猛如虎似乎可以绕过智能验证？这个方法我没试，大家可以试试看，附上相关博文：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44632570/article/details/112444096">使用Python自动填写问卷星(pyppeteer反爬虫版)</a>。<br>  我参考了某位知乎答主的方法——<br>  通过 CDP 实现在每个页面刚加载的时候执行JS代码，执行的CDP方法叫作Page.addScriptToEvaluateOnNewDocument。传入一段JS代码:</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">url = <span class="string">"http://www.baidu.com"</span> <span class="comment">#实例url</span></span><br><span class="line">option = ChromeOptions()</span><br><span class="line">option.add_experimental_option(<span class="string">'excludeSwitches'</span>, [<span class="string">'enable-automation'</span>])</span><br><span class="line">option.add_experimental_option(<span class="string">'useAutomationExtension'</span>, <span class="literal">False</span>)</span><br><span class="line">browser = webdriver.Chrome(options=option)</span><br><span class="line">browser.execute_cdp_cmd(<span class="string">'Page.addScriptToEvaluateOnNewDocument'</span>, {<span class="string">'source'</span>: <span class="string">'Object.defineProperty(navigator, "webdriver", {get: () =&gt; undefined})'</span></span><br><span class="line">})</span><br><span class="line">browser.get(url)</span><br></pre></td></tr></tbody></table></figure>
+<p>这样就可以在每次页面加载之前将webdriver属性置空从而躲过智能检测。</p>
+<p><strong>完整代码如下：</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">"正在执行操作......"</span>)</span><br><span class="line"><span class="comment"># 给出所需的url和option参数</span></span><br><span class="line">url_survey = (<span class="string">"https://www.wjx.cn/xx/xxxxxxx.aspx"</span>) <span class="comment"># 根据需要填写url</span></span><br><span class="line">option = webdriver.ChromeOptions()</span><br><span class="line">option.add_experimental_option(<span class="string">'excludeSwitches'</span>, [<span class="string">'enable-automation'</span>])</span><br><span class="line">option.add_experimental_option(<span class="string">'useAutomationExtension'</span>, <span class="literal">False</span>)</span><br><span class="line">driver = webdriver.Chrome(options=option)</span><br><span class="line">driver.execute_cdp_cmd(<span class="string">'Page.addScriptToEvaluateOnNewDocument'</span>, {<span class="string">'source'</span>: <span class="string">'Object.defineProperty(navigator, "webdriver", {get: () =&gt; undefined})'</span>})</span><br><span class="line">driver.get(url_survey)</span><br><span class="line">time.sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理Q1</span></span><br><span class="line"><span class="comment"># 生成随机数，决定点哪个按钮</span></span><br><span class="line">q1 = random()</span><br><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt;= q1 &lt;= <span class="number">0.5</span>:</span><br><span class="line">    <span class="comment"># 通过属性定位元素</span></span><br><span class="line">    <span class="comment"># q1_1是Q1的第1个按钮</span></span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q1_1']"</span>).click()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q1_2']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理Q2</span></span><br><span class="line"><span class="comment"># 生成随机数，决定点哪个按钮</span></span><br><span class="line">q2 = random()</span><br><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt;= q2 &lt;= <span class="number">0.25</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q2_1']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.25</span> &lt; q2 &lt;= <span class="number">0.50</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q2_2']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.50</span> &lt; q2 &lt;= <span class="number">0.75</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q2_3']"</span>).click()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q2_4']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理Q3</span></span><br><span class="line"><span class="comment"># 生成随机数，决定点哪个按钮</span></span><br><span class="line">q3 = random()</span><br><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt;= q3 &lt;= <span class="number">0.25</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q3_1']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.25</span> &lt; q3 &lt;= <span class="number">0.50</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q3_2']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.50</span> &lt; q3 &lt;= <span class="number">0.75</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q3_3']"</span>).click()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q3_4']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理Q4</span></span><br><span class="line"><span class="comment"># 生成随机数，决定点哪个按钮</span></span><br><span class="line">q4 = random()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q4_1']"</span>).click()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q4_2']"</span>).click()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q4_3']"</span>).click()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q4_5']"</span>).click()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q4_7']"</span>).click()</span><br><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt;= q4 &lt;= <span class="number">0.15</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q4_4']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.15</span> &lt; q4 &lt;= <span class="number">0.30</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q4_6']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.30</span> &lt; q4 &lt;= <span class="number">0.45</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q4_8']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.45</span> &lt; q4 &lt;= <span class="number">0.60</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q4_9']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.45</span> &lt; q4 &lt;= <span class="number">0.60</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q4_10']"</span>).click()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q4_11']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理Q5</span></span><br><span class="line"><span class="comment"># 生成随机数，决定点哪个按钮</span></span><br><span class="line">q5 = random()</span><br><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt;= q5 &lt;= <span class="number">0.25</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q5_1']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q5_2']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q5_3']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.25</span> &lt; q5 &lt;= <span class="number">0.50</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q5_1']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q5_2']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q5_4']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.50</span> &lt; q5 &lt;= <span class="number">0.75</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q5_2']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q5_3']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q5_4']"</span>).click()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q5_1']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q5_2']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q5_3']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q5_4']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理Q6</span></span><br><span class="line"><span class="comment"># 生成随机数，决定点哪个按钮</span></span><br><span class="line">q6 = random()</span><br><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt;= q6 &lt;= <span class="number">0.50</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q6_2']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.50</span> &lt; q6 &lt;= <span class="number">0.60</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q6_1']"</span>).click()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q6_3']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理Q7</span></span><br><span class="line"><span class="comment"># 生成随机数，决定点哪个按钮</span></span><br><span class="line">q7 = random()</span><br><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt;= q7 &lt;= <span class="number">0.95</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q7_1']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.95</span> &lt; q7 &lt;= <span class="number">0.98</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q7_2']"</span>).click()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q7_3']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理Q8</span></span><br><span class="line"><span class="comment"># 生成随机数，决定点哪个按钮</span></span><br><span class="line">q8 = random()</span><br><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt;= q8 &lt;= <span class="number">0.20</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_1']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_2']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_3']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_4']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.20</span> &lt; q8 &lt;= <span class="number">0.40</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_1']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_2']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_3']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_5']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.20</span> &lt; q8 &lt;= <span class="number">0.40</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_1']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_2']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_4']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_5']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.20</span> &lt; q8 &lt;= <span class="number">0.40</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_1']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_3']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_4']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_5']"</span>).click()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_1']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_2']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_3']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_4']"</span>).click()</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q8_5']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理Q9</span></span><br><span class="line"><span class="comment"># 生成随机数，决定点哪个按钮</span></span><br><span class="line">q9 = random()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q9_1']"</span>).click()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q9_3']"</span>).click()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q9_4']"</span>).click()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q9_5']"</span>).click()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q9_7']"</span>).click()</span><br><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt;= q9 &lt;= <span class="number">0.33</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q9_2']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.33</span> &lt; q9 &lt;= <span class="number">0.66</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q9_6']"</span>).click()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q9_8']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理Q10</span></span><br><span class="line"><span class="comment"># 生成随机数，决定点哪个按钮</span></span><br><span class="line">q10 = random()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q10_2']"</span>).click()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q10_4']"</span>).click()</span><br><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt;= q10 &lt;= <span class="number">0.50</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q10_3']"</span>).click()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q10_1']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理Q11</span></span><br><span class="line"><span class="comment"># 生成随机数，决定点哪个按钮</span></span><br><span class="line">q11 = random()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q11_1']"</span>).click()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q11_2']"</span>).click()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q11_3']"</span>).click()</span><br><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt;= q11 &lt;= <span class="number">0.25</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q11_4']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.25</span> &lt; q9 &lt;= <span class="number">0.50</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q11_5']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.50</span> &lt; q9 &lt;= <span class="number">0.75</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q11_6']"</span>).click()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q11_7']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理Q12</span></span><br><span class="line"><span class="comment"># 生成随机数，决定点哪个按钮</span></span><br><span class="line">q12 = random()</span><br><span class="line"><span class="keyword">if</span> <span class="number">0</span> &lt;= q12 &lt;= <span class="number">0.85</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q12_1']"</span>).click()</span><br><span class="line"><span class="keyword">elif</span> <span class="number">0.85</span> &lt; q12 &lt;= <span class="number">0.95</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q12_2']"</span>).click()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    driver.find_element_by_xpath(<span class="string">"//a[@rel='q12_3']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理Q13</span></span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q13_1']"</span>).click()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q13_2']"</span>).click()</span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//a[@rel='q13_3']"</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 模拟点击提交按钮</span></span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//input[@value='提交']"</span>).click()</span><br><span class="line">time.sleep(<span class="number">0.5</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 模拟点击智能验证按钮</span></span><br><span class="line"><span class="comment"># 先点确认</span></span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//button[text()='确认']"</span>).click()</span><br><span class="line"><span class="comment"># 再点智能验证提示框，进行智能验证</span></span><br><span class="line">driver.find_element_by_xpath(<span class="string">"//div[@id='captcha']"</span>).click()</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="上述代码亲测可用。"><a href="#上述代码亲测可用。" class="headerlink" title="上述代码亲测可用。"></a>上述代码亲测可用。</h2><p><strong>注意：当短时间内刷的问卷数过多时，可能会出现第二重智能验证，要拖动滑块进行验证，这个我暂时没有进行实验。</strong></p>
+<p><strong>代码验证视频：</strong><br><img src="https://img-blog.csdnimg.cn/eebda54e45e545cd8f3ad7f0730b1190.gif" alt="在这里插入图片描述"></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Silence Tang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://silence-tang.github.io/2021/09/06/Python%20selenium%E8%87%AA%E5%8A%A8%E5%8C%96%E5%88%B7%E9%97%AE%E5%8D%B7+%E7%BB%95%E8%BF%87%E6%99%BA%E8%83%BD%E9%AA%8C%E8%AF%81/" title="Python selenium自动化刷问卷+绕过智能验证">http://silence-tang.github.io/2021/09/06/Python selenium自动化刷问卷+绕过智能验证/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+              <a href="/tags/selenium/" rel="tag"><i class="fa fa-tag"></i> selenium</a>
+              <a href="/tags/%E7%88%AC%E8%99%AB/" rel="tag"><i class="fa fa-tag"></i> 爬虫</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/06/%E4%B8%80%E6%96%87%E6%8E%8C%E6%8F%A1Python%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8%E6%93%8D%E4%BD%9C/" rel="prev" title="一文掌握Python数据分析入门操作">
+      <i class="fa fa-chevron-left"></i> 一文掌握Python数据分析入门操作
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/06/Python%E6%93%8D%E4%BD%9CMySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5/" rel="next" title="Python操作MySQL数据库实现数据导入">
+      Python操作MySQL数据库实现数据导入 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8A%E8%BF%B0%E4%BB%A3%E7%A0%81%E4%BA%B2%E6%B5%8B%E5%8F%AF%E7%94%A8%E3%80%82"><span class="nav-number">1.</span> <span class="nav-text">上述代码亲测可用。</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Silence Tang"
+      src="/images/profile.jpg">
+  <p class="site-author-name" itemprop="name">Silence Tang</p>
+  <div class="site-description" itemprop="description">Wir müssen wissen. Wir werden wissen.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/silence-tang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;silence-tang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_45717425?spm=1001.2101.3001.5343" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_45717425?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank"><i class="fa fa-laptop fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/twilightfeng-xian" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;twilightfeng-xian" rel="noopener" target="_blank"><i class="fa fa-leaf fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.csdn.net/qq_45717425?spm=1001.2101.3001.5343" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_45717425?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank">My CSDN</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Silence Tang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'nYGyGfBTwVl3cyGSIfurP0nw-gzGzoHsz',
+      appKey     : 'FUVwrQPv4Vs824mpcvcbMgcd',
+      placeholder: "欢迎留言评论~",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
+</body>
+</html>

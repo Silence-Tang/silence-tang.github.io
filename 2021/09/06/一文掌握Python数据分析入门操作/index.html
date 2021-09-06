@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"silence-tang.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"always","padding":18,"offset":12},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="这是一篇介绍用Python进行基础的数据分析的文章，总结了其他博主文章的要点，主要分为6个部分：1.生成或导入数据表2.检查数据表3.清洗数据表4.数据预处理5.数据汇总 | 数据统计 | 数据导出6.自动化处理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一文掌握Python数据分析入门操作">
+<meta property="og:url" content="http://silence-tang.github.io/2021/09/06/%E4%B8%80%E6%96%87%E6%8E%8C%E6%8F%A1Python%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="Silence&#39;s Blog">
+<meta property="og:description" content="这是一篇介绍用Python进行基础的数据分析的文章，总结了其他博主文章的要点，主要分为6个部分：1.生成或导入数据表2.检查数据表3.清洗数据表4.数据预处理5.数据汇总 | 数据统计 | 数据导出6.自动化处理">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/d32749b3499e4a70aa1143942c821653.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_16,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/5ba88ca35c4e4cde90c49f1248411aa9.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_18,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/c9e8e4d10f3442be99b8d117ad032646.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/293c311454474188ad80d6adcb338e11.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/63e6f680d63f404d848608a435a0090b.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/f93df2305cbd4093b1fbb39999e7b268.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_17,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/f4ae070ad0af4365af004aebcc418428.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/a6b72a8ee930449096b4b22d9f8c84bd.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/8025bc3af9e0428ca2729f9a895addcb.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_16,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2a5bcbdb451c4fe089b116fb0a52a29b.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/7eb6dd608aca4d7091b7c4c8007139aa.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/5e9012e70d954442ba318b54f6f4aa40.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/7b956f1d331b4783842feaf5518d5957.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/4a1e6a97628d471bad5612dacda04cf6.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/ac456eccb50241d3a72e509866d139da.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/38681f709a8f4212945ad8d5e18d756f.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/7c7a018de09c44258311bc36f6db5b9a.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/48a4d2ee3348420f967e24ffcf071684.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2657a427d2d5461bbf68597351a93546.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/72ca68750df04c72b3f7540aa50d57bb.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/886e6e8b60af484cadcb84c3f71c1d1c.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/1032ff64192a497ea0dca0996660b129.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_17,color_FFFFFF,t_70,g_se,x_16">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/47392973f62b4728b5f228aa3cd0cdf0.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16">
+<meta property="article:published_time" content="2021-09-06T11:39:00.000Z">
+<meta property="article:modified_time" content="2021-09-06T11:52:59.630Z">
+<meta property="article:author" content="Silence Tang">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="数据分析">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/d32749b3499e4a70aa1143942c821653.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_16,color_FFFFFF,t_70,g_se,x_16">
+
+<link rel="canonical" href="http://silence-tang.github.io/2021/09/06/%E4%B8%80%E6%96%87%E6%8E%8C%E6%8F%A1Python%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8%E6%93%8D%E4%BD%9C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>一文掌握Python数据分析入门操作 | Silence's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Silence's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Live for Die</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">32</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">32</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://silence-tang.github.io/2021/09/06/%E4%B8%80%E6%96%87%E6%8E%8C%E6%8F%A1Python%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8%E6%93%8D%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/profile.jpg">
+      <meta itemprop="name" content="Silence Tang">
+      <meta itemprop="description" content="Wir müssen wissen. Wir werden wissen.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Silence's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一文掌握Python数据分析入门操作
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-06 19:39:00 / 修改时间：19:52:59" itemprop="dateCreated datePublished" datetime="2021-09-06T19:39:00+08:00">2021-09-06</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/06/%E4%B8%80%E6%96%87%E6%8E%8C%E6%8F%A1Python%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8%E6%93%8D%E4%BD%9C/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/06/%E4%B8%80%E6%96%87%E6%8E%8C%E6%8F%A1Python%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8%E6%93%8D%E4%BD%9C/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="这是一篇介绍用Python进行基础的数据分析的文章，总结了其他博主文章的要点，主要分为6个部分："><a href="#这是一篇介绍用Python进行基础的数据分析的文章，总结了其他博主文章的要点，主要分为6个部分：" class="headerlink" title="这是一篇介绍用Python进行基础的数据分析的文章，总结了其他博主文章的要点，主要分为6个部分："></a>这是一篇介绍用Python进行基础的数据分析的文章，总结了其他博主文章的要点，主要分为6个部分：</h2><p><strong>1.生成或导入数据表<br>2.检查数据表<br>3.清洗数据表<br>4.数据预处理<br>5.数据汇总 | 数据统计 | 数据导出<br>6.自动化处理</strong></p>
+<span id="more"></span>
+
+<h2 id="1-生成或导入数据表"><a href="#1-生成或导入数据表" class="headerlink" title="1.生成或导入数据表"></a><strong>1.生成或导入数据表</strong></h2><p>在使用 python 进行数据导入前，我们需要先导入 pandas 和 numpy 库。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>导入数据表（从csv/xlsx文件导入）：</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">df = pd.DataFrame(pd.read_csv(<span class="string">'xxx.csv'</span>,header=<span class="number">1</span>))</span><br><span class="line">df = pd.DataFrame(pd.read_excel(<span class="string">'xxx.xlsx'</span>))</span><br><span class="line"><span class="comment"># df是dataframe的简写</span></span><br></pre></td></tr></tbody></table></figure>
+<p><strong>生成数据表</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列属性名columns以list形式给出，np.nan是NaN空值</span></span><br><span class="line">df = pd.DataFrame({<span class="string">'id'</span>: [<span class="number">20001</span>,<span class="number">20002</span>,<span class="number">20003</span>,<span class="number">20004</span>,<span class="number">20005</span>,<span class="number">20006</span>,<span class="number">20007</span>],</span><br><span class="line">                   <span class="string">'date'</span>: pd.date_range(<span class="string">'20210901'</span>, periods = <span class="number">7</span>),</span><br><span class="line">                   <span class="string">'city'</span>: [<span class="string">'Beijing '</span>, <span class="string">'SH'</span>, <span class="string">' guangzhou '</span>, <span class="string">'Shenzhen'</span>, <span class="string">'shanghai'</span>, <span class="string">'BEIJING '</span>, <span class="string">'SUZHOU'</span>],</span><br><span class="line">                   <span class="string">'age'</span>: [<span class="number">21</span>,<span class="number">45</span>,<span class="number">25</span>,<span class="number">34</span>,<span class="number">31</span>,<span class="number">27</span>,<span class="number">42</span>],</span><br><span class="line">                   <span class="string">'class'</span>: [<span class="string">'400-G'</span>,<span class="string">'500-A'</span>,<span class="string">'280-D'</span>,<span class="string">'320-C'</span>,<span class="string">'210-A'</span>,<span class="string">'470-F'</span>,<span class="string">'250-F'</span>],</span><br><span class="line">                   <span class="string">'salary'</span>: [<span class="number">15600</span>,np.nan,<span class="number">34800</span>,<span class="number">21000</span>,np.nan,<span class="number">9500</span>,np.nan]},</span><br><span class="line">                   columns = [<span class="string">'id'</span>,<span class="string">'date'</span>,<span class="string">'city'</span>,<span class="string">'age'</span>,<span class="string">'class'</span>,<span class="string">'salary'</span>])</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>打印刚才生成的数据表</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印数据表</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'数据表内容如下：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df)</span><br><span class="line"><span class="comment"># 打印数据表某一列</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'数据表的city列内容如下：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df[<span class="string">'city'</span>])</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/d32749b3499e4a70aa1143942c821653.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_16,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<h2 id="2-检查数据表"><a href="#2-检查数据表" class="headerlink" title="2.检查数据表"></a><strong>2.检查数据表</strong></h2><p><strong>输出表维度及基本信息</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 数据维度(6, 6)</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'数据表维度为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df.shape)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印数据表信息</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'数据表基本信息如下：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df.info())</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：显示表中数据的基本信息如数据类型，空值个数，占用空间大小等</strong><br><img src="https://img-blog.csdnimg.cn/5ba88ca35c4e4cde90c49f1248411aa9.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_18,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br><strong>输出数据表的全部列名称</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输出数据表的全部列名称</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'数据表的全部列名称如下：'</span>)</span><br><span class="line"><span class="comment"># 强制转化为列表形式</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(df.columns))</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果:</strong><br><img src="https://img-blog.csdnimg.cn/c9e8e4d10f3442be99b8d117ad032646.png" alt="在这里插入图片描述"><br><strong>检查数据表的空值和唯一值</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查数据表是否存在空值</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'数据表空值判断如下：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df.isnull())</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查数据表某一列是否存在空值</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'数据表的salary列空值判断如下：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df[<span class="string">'salary'</span>].isnull())</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出数据表某一列的唯一值</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'数据表的city列唯一值如下：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df[<span class="string">'city'</span>].unique())</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/293c311454474188ad80d6adcb338e11.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br><strong>查看数据表全部数值（以二维列表的形式返回）</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看数据表数值,Python中的Values函数用来查看数据表中的数值,以二维列表的形式返回</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'数据表的全部数值内容如下：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df.values)</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/63e6f680d63f404d848608a435a0090b.png" alt="在这里插入图片描述"><br><strong>查看数据表部分行的数据</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看前4行数据</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'数据表的前4行内容如下：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df.head(<span class="number">4</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看后4行数据</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'数据表的后4行内容如下：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df.tail(<span class="number">4</span>))</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/f93df2305cbd4093b1fbb39999e7b268.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_17,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<h2 id="3-清洗数据表"><a href="#3-清洗数据表" class="headerlink" title="3.清洗数据表"></a><strong>3.清洗数据表</strong></h2><p><strong>清理存在空值的行</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除数据表中含有空值的行,返回一个不含空值的数据框</span></span><br><span class="line"><span class="comment"># 这里的删除并不是对原数据框操作，而是相当于对一个copy的数据框进行删除，所以需要把结果传给新数据框df1</span></span><br><span class="line">df1 = df.dropna(how = <span class="string">'any'</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'df删除所有存在空值的行后的新数据框为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df1)</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/f4ae070ad0af4365af004aebcc418428.png" alt="在这里插入图片描述"><br><strong>空值的均值填充</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用salary列的均值去填充salary列空值</span></span><br><span class="line"><span class="comment"># inplace = True表示直接对原数据框操作</span></span><br><span class="line"><span class="comment"># 此时，不能将fillna语句结果赋值给新数据框</span></span><br><span class="line">df[<span class="string">'salary'</span>].fillna(df[<span class="string">'salary'</span>].mean(), inplace = <span class="literal">True</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'df填充空值后的结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df)</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/a6b72a8ee930449096b4b22d9f8c84bd.png" alt="在这里插入图片描述"><br><strong>删除某一列中所有字符中的空格以及单词的大小写替换</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 清除city列中所有字符中的空格</span></span><br><span class="line">df[<span class="string">'city'</span>] = df[<span class="string">'city'</span>].<span class="built_in">map</span>(<span class="built_in">str</span>.strip)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'df清除city列中所有字符中的空格后的结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将city列的所有字母转换为小写</span></span><br><span class="line">df[<span class="string">'city'</span>] = df[<span class="string">'city'</span>].<span class="built_in">str</span>.lower()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'df的city列中所有字母转换为小写后的结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df)</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/8025bc3af9e0428ca2729f9a895addcb.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_16,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br><strong>某一列数据的类型转换</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用price列的均值去填充price列空值</span></span><br><span class="line"><span class="comment"># inplace = True表示直接对原数据框操作</span></span><br><span class="line"><span class="comment"># 此时，不能将fillna语句结果赋值给新数据框</span></span><br><span class="line">df[<span class="string">'salary'</span>].fillna(df[<span class="string">'salary'</span>].mean(), inplace = <span class="literal">True</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'df填充空值后的结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df)</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/2a5bcbdb451c4fe089b116fb0a52a29b.png" alt="在这里插入图片描述"><br><strong>删除重复值所在行</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除重复值</span></span><br><span class="line">df[<span class="string">'city'</span>] = df[<span class="string">'city'</span>].drop_duplicates()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'df的city列删除重复值后的结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df)</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/7eb6dd608aca4d7091b7c4c8007139aa.png" alt="在这里插入图片描述"><br><strong>替换数据值</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 数据替换</span></span><br><span class="line">df[<span class="string">'city'</span>] = df[<span class="string">'city'</span>].replace(<span class="string">'sh'</span>, <span class="string">'shanghai'</span>)</span><br><span class="line">df[<span class="string">'city'</span>] = df[<span class="string">'city'</span>].replace(NaN, <span class="string">'nanjing'</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'df的city列将sh替换为shanghai后的结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df)</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/5e9012e70d954442ba318b54f6f4aa40.png" alt="在这里插入图片描述"><br><strong>更改列属性名称</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更改列名称</span></span><br><span class="line">df = df.rename(columns={<span class="string">'class'</span>: <span class="string">'category'</span>})</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'df更改class列名称后的结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df)</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/7b956f1d331b4783842feaf5518d5957.png" alt="在这里插入图片描述"></p>
+<h2 id="4-数据预处理"><a href="#4-数据预处理" class="headerlink" title="4.数据预处理"></a>4.数据预处理</h2><p><strong>数据表的合并</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#创建 df1 数据表</span></span><br><span class="line">df1 = pd.DataFrame({<span class="string">"id"</span>: [<span class="number">20001</span>,<span class="number">20002</span>,<span class="number">20003</span>,<span class="number">20004</span>,<span class="number">20005</span>,<span class="number">20006</span>,<span class="number">20007</span>],</span><br><span class="line">                  <span class="string">"gender"</span>: [<span class="string">'male'</span>,<span class="string">'female'</span>,<span class="string">'male'</span>,<span class="string">'female'</span>,<span class="string">'male'</span>,<span class="string">'female'</span>,<span class="string">'male'</span>],</span><br><span class="line">                  <span class="string">"pay"</span>: [<span class="string">'Y'</span>,<span class="string">'N'</span>,<span class="string">'Y'</span>,<span class="string">'Y'</span>,<span class="string">'N'</span>,<span class="string">'Y'</span>,<span class="string">'N'</span>],</span><br><span class="line">                  <span class="string">"m-point"</span>: [<span class="number">10</span>,<span class="number">12</span>,<span class="number">20</span>,<span class="number">40</span>,<span class="number">40</span>,<span class="number">40</span>,<span class="number">30</span>]})</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'df1为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据表合并(df and df1)，how = 'inner'/'outer'/'left'/'right/</span></span><br><span class="line">df_inner = pd.merge(df, df1, how = <span class="string">'inner'</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'df和df1合并后的结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df_inner)</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/4a1e6a97628d471bad5612dacda04cf6.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br><strong>整张表按照某一列数据升序/降序排列</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 数据表按某两列排序(一个主序列，一个辅助序列，当主序列出现相等情况时，按辅助序列值升序排列)</span></span><br><span class="line">df_inner = df_inner.sort_values(by = [<span class="string">'age'</span>,<span class="string">'salary'</span>], ascending = <span class="literal">True</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'df_inner按age列升序排列后的结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df_inner)</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/ac456eccb50241d3a72e509866d139da.png" alt="在这里插入图片描述"><br><strong>新建一列对某一列中符合条件的项进行标记</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对符合条件的项进行标记</span></span><br><span class="line"><span class="comment"># 如果salary列的值&gt;3000，group列显示high，否则显示low</span></span><br><span class="line">df_inner[<span class="string">'group'</span>] = np.where(df_inner[<span class="string">'salary'</span>] &gt; <span class="number">20500</span>, <span class="string">'high'</span>, <span class="string">'low'</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'df_inner添加group列后的结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df_inner)</span><br></pre></td></tr></tbody></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/38681f709a8f4212945ad8d5e18d756f.png" alt="在这里插入图片描述"><br><strong>新建一列对某一列中符合多个条件的数据进行标记</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对符合多个条件的数据进行分组标记</span></span><br><span class="line">df_inner.loc[(df_inner[<span class="string">'city'</span>] == <span class="string">'shenzhen'</span>) &amp; (df_inner[<span class="string">'salary'</span>] &gt;= <span class="number">20000</span>), <span class="string">'flag'</span>] = <span class="number">1</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'df_inner添加flag列后的结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df_inner)</span><br></pre></td></tr></tbody></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/7c7a018de09c44258311bc36f6db5b9a.png" alt="在这里插入图片描述"><br><strong>此时我们恢复数据表，按index升序排列</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 恢复一下按index升序排列</span></span><br><span class="line">df_inner = df_inner.sort_index()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'重新按index排序结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df_inner)</span><br></pre></td></tr></tbody></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/48a4d2ee3348420f967e24ffcf071684.png" alt="在这里插入图片描述"><br><strong>按行或位置提取数据(loc iloc)</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按数据表的--索引标签--提取数据(loc)</span></span><br><span class="line">df_part1 = df_inner.loc[<span class="number">0</span>:<span class="number">3</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'提取结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df_part1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 按数据表的--位置--提取数据(iloc)</span></span><br><span class="line"><span class="comment"># [0,2,5]表示所在行的位置，[4,5]表示所在列的位置</span></span><br><span class="line">df_part2 = df_inner.iloc[[<span class="number">0</span>,<span class="number">2</span>,<span class="number">5</span>],[<span class="number">4</span>,<span class="number">5</span>]]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'提取结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df_part2)</span><br></pre></td></tr></tbody></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/2657a427d2d5461bbf68597351a93546.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br><strong>按条件筛选（与，或，非）</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按条件筛选（与，或，非）</span></span><br><span class="line"><span class="comment"># 使用“与”条件进行筛选</span></span><br><span class="line">df_part3 = df_inner.loc[(df_inner[<span class="string">'age'</span>] &gt; <span class="number">20</span>) &amp; (df_inner[<span class="string">'city'</span>] == <span class="string">'beijing'</span>), [<span class="string">'id'</span>,<span class="string">'city'</span>,<span class="string">'age'</span>,<span class="string">'gender'</span>,<span class="string">'price'</span>]]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'提取结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df_part3)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用“或”条件筛选</span></span><br><span class="line">df_part4 = df_inner.loc[(df_inner[<span class="string">'age'</span>] &gt; <span class="number">35</span>) | (df_inner[<span class="string">'city'</span>] == <span class="string">'beijing'</span>), [<span class="string">'id'</span>,<span class="string">'city'</span>,<span class="string">'age'</span>,<span class="string">'gender'</span>,<span class="string">'price'</span>]]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'提取结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df_part4)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'total price = %d'</span> % df_part4[<span class="string">'price'</span>].<span class="built_in">sum</span>())</span><br></pre></td></tr></tbody></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/72ca68750df04c72b3f7540aa50d57bb.png" alt="在这里插入图片描述"></p>
+<h2 id="5-数据汇总-数据统计-数据导出"><a href="#5-数据汇总-数据统计-数据导出" class="headerlink" title="5.数据汇总 | 数据统计 | 数据导出"></a>5.数据汇总 | 数据统计 | 数据导出</h2><p><strong>数据表描述性的宏观统计，输出每一列的计数、均值、标准差等</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 数据表描述性统计</span></span><br><span class="line"><span class="comment"># describe函数是进行描述统计的函数，按列标签生成每列数据的总数，均值，标准差等数据</span></span><br><span class="line"><span class="comment"># 下面的代码中对数据表进行描述统计，使用round函数设置结果显示的小数位，并对结果数据进行转置</span></span><br><span class="line">statistics_result = df_inner.describe().<span class="built_in">round</span>(<span class="number">2</span>).T</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'数据表宏观统计结果为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(statistics_result)</span><br></pre></td></tr></tbody></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/886e6e8b60af484cadcb84c3f71c1d1c.png" alt="在这里插入图片描述"><br><strong>输出标准差、协方差、相关系数、数据表各列之间的相关性分析</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 标准差</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'price列的标准差为：%d'</span> % df_inner[<span class="string">'price'</span>].std())</span><br><span class="line"></span><br><span class="line"><span class="comment"># 协方差</span></span><br><span class="line"><span class="comment"># 协方差可以反应两个变量的协同关系, 变化趋势是否一致，是同向还是方向变化</span></span><br><span class="line"><span class="comment"># 两个字段间的协方差</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'price列与m-point列之间的的协方差为：%d'</span> % df_inner[<span class="string">'price'</span>].cov(df_inner[<span class="string">'m-point'</span>]))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 相关系数</span></span><br><span class="line"><span class="comment"># corr函数用来计算数据间的相关系数，可以单独对特定数据进行计算，也可以对整个数据表中各个列进行计算</span></span><br><span class="line"><span class="comment"># 相关系数在-1到1之间，接近1为正相关，接近-1为负相关，0为无线性相关关系</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'price列与m-point列的相关系数为：%f'</span> % df_inner[<span class="string">'price'</span>].corr(df_inner[<span class="string">'m-point'</span>]))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据表各列之间的相关性分析</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'数据表各列之间的相关系数为：'</span>)</span><br><span class="line"><span class="built_in">print</span>(df_inner.corr())</span><br></pre></td></tr></tbody></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/1032ff64192a497ea0dca0996660b129.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_17,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"><br><strong>输出至xlsx/csv</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#输出到excel格式</span></span><br><span class="line">df_inner.to_excel(<span class="string">'C:\\Users\\HP\\Desktop\\py_to_excel.xlsx'</span>, sheet_name=<span class="string">'sheet1'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#输出到CSV格式</span></span><br><span class="line">df_inner.to_csv(<span class="string">'C:\\Users\\HP\\Desktop\\py_to_csv.csv'</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="6-自动化处理-将一些重复性的机械操作封装"><a href="#6-自动化处理-将一些重复性的机械操作封装" class="headerlink" title="6.自动化处理(将一些重复性的机械操作封装)"></a>6.自动化处理(将一些重复性的机械操作封装)</h2><p><strong>例如把显示数据表基本信息的操作写入函数</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#创建自定义函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">display_info</span>(<span class="params">x</span>):</span></span><br><span class="line">    shape=x.shape</span><br><span class="line">    types=x.dtypes</span><br><span class="line">    colums=x.columns</span><br><span class="line">    statistics_result = df_inner.describe().<span class="built_in">round</span>(<span class="number">2</span>).T</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"数据维度:\n"</span>,shape)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"数据格式:\n"</span>,types)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"列名称:\n"</span>,colums)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"统计信息:\n"</span>,statistics_result)</span><br><span class="line"></span><br><span class="line"><span class="comment">#调用自定义函数获取 df 数据表信息并输出结果</span></span><br><span class="line">display_info(df)</span><br></pre></td></tr></tbody></table></figure>
+<p><strong>结果：</strong><br><img src="https://img-blog.csdnimg.cn/47392973f62b4728b5f228aa3cd0cdf0.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Silence Tang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://silence-tang.github.io/2021/09/06/%E4%B8%80%E6%96%87%E6%8E%8C%E6%8F%A1Python%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8%E6%93%8D%E4%BD%9C/" title="一文掌握Python数据分析入门操作">http://silence-tang.github.io/2021/09/06/一文掌握Python数据分析入门操作/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/" rel="tag"><i class="fa fa-tag"></i> 数据分析</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/06/Python%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E7%88%AC%E5%8F%96%E6%88%90%E7%BB%A9%E4%BF%A1%E6%81%AF+%E7%BB%98%E5%88%B6%E6%88%90%E7%BB%A9%E5%88%86%E5%B8%83%E5%9B%BE+%E5%AF%BC%E5%85%A5MySQL/" rel="prev" title="Python模拟登陆教务系统爬取成绩信息+绘制成绩分布图+导入MySQL">
+      <i class="fa fa-chevron-left"></i> Python模拟登陆教务系统爬取成绩信息+绘制成绩分布图+导入MySQL
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/06/Python%20selenium%E8%87%AA%E5%8A%A8%E5%8C%96%E5%88%B7%E9%97%AE%E5%8D%B7+%E7%BB%95%E8%BF%87%E6%99%BA%E8%83%BD%E9%AA%8C%E8%AF%81/" rel="next" title="Python selenium自动化刷问卷+绕过智能验证">
+      Python selenium自动化刷问卷+绕过智能验证 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%99%E6%98%AF%E4%B8%80%E7%AF%87%E4%BB%8B%E7%BB%8D%E7%94%A8Python%E8%BF%9B%E8%A1%8C%E5%9F%BA%E7%A1%80%E7%9A%84%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E7%9A%84%E6%96%87%E7%AB%A0%EF%BC%8C%E6%80%BB%E7%BB%93%E4%BA%86%E5%85%B6%E4%BB%96%E5%8D%9A%E4%B8%BB%E6%96%87%E7%AB%A0%E7%9A%84%E8%A6%81%E7%82%B9%EF%BC%8C%E4%B8%BB%E8%A6%81%E5%88%86%E4%B8%BA6%E4%B8%AA%E9%83%A8%E5%88%86%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">这是一篇介绍用Python进行基础的数据分析的文章，总结了其他博主文章的要点，主要分为6个部分：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%94%9F%E6%88%90%E6%88%96%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE%E8%A1%A8"><span class="nav-number">2.</span> <span class="nav-text">1.生成或导入数据表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A3%80%E6%9F%A5%E6%95%B0%E6%8D%AE%E8%A1%A8"><span class="nav-number">3.</span> <span class="nav-text">2.检查数据表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%B8%85%E6%B4%97%E6%95%B0%E6%8D%AE%E8%A1%A8"><span class="nav-number">4.</span> <span class="nav-text">3.清洗数据表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">5.</span> <span class="nav-text">4.数据预处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%95%B0%E6%8D%AE%E6%B1%87%E6%80%BB-%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1-%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%87%BA"><span class="nav-number">6.</span> <span class="nav-text">5.数据汇总 | 数据统计 | 数据导出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E8%87%AA%E5%8A%A8%E5%8C%96%E5%A4%84%E7%90%86-%E5%B0%86%E4%B8%80%E4%BA%9B%E9%87%8D%E5%A4%8D%E6%80%A7%E7%9A%84%E6%9C%BA%E6%A2%B0%E6%93%8D%E4%BD%9C%E5%B0%81%E8%A3%85"><span class="nav-number">7.</span> <span class="nav-text">6.自动化处理(将一些重复性的机械操作封装)</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Silence Tang"
+      src="/images/profile.jpg">
+  <p class="site-author-name" itemprop="name">Silence Tang</p>
+  <div class="site-description" itemprop="description">Wir müssen wissen. Wir werden wissen.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/silence-tang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;silence-tang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_45717425?spm=1001.2101.3001.5343" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_45717425?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank"><i class="fa fa-laptop fa-fw"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/twilightfeng-xian" title="知乎 → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;twilightfeng-xian" rel="noopener" target="_blank"><i class="fa fa-leaf fa-fw"></i>知乎</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.csdn.net/qq_45717425?spm=1001.2101.3001.5343" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_45717425?spm&#x3D;1001.2101.3001.5343" rel="noopener" target="_blank">My CSDN</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Silence Tang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'nYGyGfBTwVl3cyGSIfurP0nw-gzGzoHsz',
+      appKey     : 'FUVwrQPv4Vs824mpcvcbMgcd',
+      placeholder: "欢迎留言评论~",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
+</body>
+</html>
