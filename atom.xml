@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Silence&#39;s Blog</title>
+  <icon>http://silence-tang.github.io/icon.png</icon>
+  <subtitle>Live for Die</subtitle>
+  <link href="http://silence-tang.github.io/atom.xml" rel="self"/>
+  
+  <link href="http://silence-tang.github.io/"/>
+  <updated>2021-09-06T13:10:46.310Z</updated>
+  <id>http://silence-tang.github.io/</id>
+  
+  <author>
+    <name>Silence Tang</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>vs code实现调试运行HTML文件</title>
+    <link href="http://silence-tang.github.io/2021/09/06/vs%20code%E5%AE%9E%E7%8E%B0%E8%B0%83%E8%AF%95%E8%BF%90%E8%A1%8CHTML%E6%96%87%E4%BB%B6/"/>
+    <id>http://silence-tang.github.io/2021/09/06/vs%20code%E5%AE%9E%E7%8E%B0%E8%B0%83%E8%AF%95%E8%BF%90%E8%A1%8CHTML%E6%96%87%E4%BB%B6/</id>
+    <published>2021-09-06T13:08:00.000Z</published>
+    <updated>2021-09-06T13:10:46.310Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;1.打开vs code&lt;/p&gt;
+&lt;p&gt;2.用Ctrl+Shift+X打开扩展栏，在输入框中输入”live server”，在下方显示的所有扩展中选择”Live Server”并安装&lt;br&gt;&lt;img src=&quot;https://img-blog.csdnimg.cn/20210719170855877.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70&quot; alt=&quot;在这里插入图片描述&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="HTML/CSS/MD" scheme="http://silence-tang.github.io/categories/HTML-CSS-MD/"/>
+    
+    
+    <category term="HTML" scheme="http://silence-tang.github.io/tags/HTML/"/>
+    
+    <category term="vs code" scheme="http://silence-tang.github.io/tags/vs-code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Markdown转HTML工具</title>
+    <link href="http://silence-tang.github.io/2021/09/06/Markdown%E8%BD%ACHTML%E5%B7%A5%E5%85%B7/"/>
+    <id>http://silence-tang.github.io/2021/09/06/Markdown%E8%BD%ACHTML%E5%B7%A5%E5%85%B7/</id>
+    <published>2021-09-06T13:04:00.000Z</published>
+    <updated>2021-09-06T13:11:24.443Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt; &lt;strong&gt;1. MaHua在线markdown编辑器：&lt;a href=&quot;http://mahua.jser.me/&quot;&gt;http://mahua.jser.me/&lt;/a&gt;&lt;br&gt;  效果如下：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://img-blog.csdnimg.cn/20210719162741925.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70&quot; alt=&quot;在这里插入图片描述&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="HTML/CSS/MD" scheme="http://silence-tang.github.io/categories/HTML-CSS-MD/"/>
+    
+    
+    <category term="Markdown" scheme="http://silence-tang.github.io/tags/Markdown/"/>
+    
+    <category term="HTML" scheme="http://silence-tang.github.io/tags/HTML/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>vs code Markdown转HTML</title>
+    <link href="http://silence-tang.github.io/2021/09/06/vs%20code%20Markdown%E8%BD%ACHTML/"/>
+    <id>http://silence-tang.github.io/2021/09/06/vs%20code%20Markdown%E8%BD%ACHTML/</id>
+    <published>2021-09-06T13:04:00.000Z</published>
+    <updated>2021-09-06T13:07:05.746Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;1.安装扩展插件”Copy Markdown as HTML”&lt;/p&gt;
+&lt;p&gt;2.打开.md文件&lt;/p&gt;
+&lt;p&gt;3.用Ctrl+Shift+P打开命令面板，输入”markdown”，在下拉选项中选择”Markdown: Copy as</summary>
+        
+      
+    
+    
+    
+    <category term="HTML/CSS/MD" scheme="http://silence-tang.github.io/categories/HTML-CSS-MD/"/>
+    
+    
+    <category term="Markdown" scheme="http://silence-tang.github.io/tags/Markdown/"/>
+    
+    <category term="HTML" scheme="http://silence-tang.github.io/tags/HTML/"/>
+    
+    <category term="vs code" scheme="http://silence-tang.github.io/tags/vs-code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>vs code实现Markdown实时预览</title>
+    <link href="http://silence-tang.github.io/2021/09/06/vs%20code%E5%AE%9E%E7%8E%B0Markdown%E5%AE%9E%E6%97%B6%E9%A2%84%E8%A7%88/"/>
+    <id>http://silence-tang.github.io/2021/09/06/vs%20code%E5%AE%9E%E7%8E%B0Markdown%E5%AE%9E%E6%97%B6%E9%A2%84%E8%A7%88/</id>
+    <published>2021-09-06T13:02:00.000Z</published>
+    <updated>2021-09-06T13:07:03.712Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;vs code实现markdown实时预览的方法如下：&lt;/p&gt;
+&lt;p&gt;1.打开你的vs code&lt;/p&gt;
+&lt;p&gt;2.用Ctrl+Shift+X打开扩展栏，在输入框中输入”markdown”，在下方显示的所有扩展中选择”Markdown Preview Enhanced”并安装&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://img-blog.csdnimg.cn/20210719164904225.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzE3NDI1,size_16,color_FFFFFF,t_70&quot; alt=&quot;在这里插入图片描述&quot;&gt;&lt;/p&gt;
+&lt;p&gt;3.编辑你的markdown文件&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="HTML/CSS/MD" scheme="http://silence-tang.github.io/categories/HTML-CSS-MD/"/>
+    
+    
+    <category term="Markdown" scheme="http://silence-tang.github.io/tags/Markdown/"/>
+    
+    <category term="vs code" scheme="http://silence-tang.github.io/tags/vs-code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于各种实验</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E5%85%B3%E4%BA%8E%E5%90%84%E7%A7%8D%E5%AE%9E%E9%AA%8C/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E5%85%B3%E4%BA%8E%E5%90%84%E7%A7%8D%E5%AE%9E%E9%AA%8C/</id>
+    <published>2021-09-06T12:59:00.000Z</published>
+    <updated>2021-09-06T13:00:01.083Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;  我在CSDN上已经上传了计科操作系统实验、计组实验、电子线路实验I的实验报告及相关资料，可供借鉴。具体链接如下：&lt;/p&gt;
+&lt;p&gt;  1. &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="计科课程学习" scheme="http://silence-tang.github.io/categories/%E8%AE%A1%E7%A7%91%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>西电计科课程学习</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E8%A5%BF%E7%94%B5%E8%AE%A1%E7%A7%91%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E8%A5%BF%E7%94%B5%E8%AE%A1%E7%A7%91%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/</id>
+    <published>2021-09-06T12:50:00.000Z</published>
+    <updated>2021-09-06T12:54:00.228Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;西电计科课程学习&quot;&gt;&lt;a href=&quot;#西电计科课程学习&quot; class=&quot;headerlink&quot; title=&quot;西电计科课程学习&quot;&gt;&lt;/a&gt;西电计科课程学习&lt;/h1&gt;&lt;h2 id=&quot;个人简介&quot;&gt;&lt;a href=&quot;#个人简介&quot; class=&quot;headerlink&quot; title=&quot;个人简介:&quot;&gt;&lt;/a&gt;个人简介:&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;  本人是XDU19级CS学生，曾获2019-2020学年国家奖学金，大一学年综评:2/457，M2:2/457。目前在计科大数据与智能方向。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&quot;概述：&quot;&gt;&lt;a href=&quot;#概述：&quot; class=&quot;headerlink&quot; title=&quot;概述：&quot;&gt;&lt;/a&gt;概述：&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;  本文的主要内容是结合本人的一些想法与观点以及优秀学长的学习经验，对西电CS所开设课程分学期进行一个比较清晰而全面详尽的剖析与学习经验&amp;amp;学习技巧分享，希望能够对计科学弟学妹的学习有所帮助。&lt;/strong&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="计科课程学习" scheme="http://silence-tang.github.io/categories/%E8%AE%A1%E7%A7%91%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>西电操作系统期末知识点归纳（随笔）</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9C%9F%E6%9C%AB%E7%9F%A5%E8%AF%86%E7%82%B9%E5%BD%92%E7%BA%B3%EF%BC%88%E9%9A%8F%E7%AC%94%EF%BC%89/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9C%9F%E6%9C%AB%E7%9F%A5%E8%AF%86%E7%82%B9%E5%BD%92%E7%BA%B3%EF%BC%88%E9%9A%8F%E7%AC%94%EF%BC%89/</id>
+    <published>2021-09-06T12:49:00.000Z</published>
+    <updated>2021-09-06T12:49:49.492Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://img-blog.csdnimg.cn/img_convert/04aa68f0f953040be0b289ec20f6df5c.png&quot; alt=&quot;在这里插入图片描述&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="计科课程学习" scheme="http://silence-tang.github.io/categories/%E8%AE%A1%E7%A7%91%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+    <category term="操作系统" scheme="http://silence-tang.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>西电计网期末复习要点+iPad手写笔记</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E8%AE%A1%E7%BD%91%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0%E8%A6%81%E7%82%B9+iPad%E6%89%8B%E5%86%99%E7%AC%94%E8%AE%B0/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E8%AE%A1%E7%BD%91%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0%E8%A6%81%E7%82%B9+iPad%E6%89%8B%E5%86%99%E7%AC%94%E8%AE%B0/</id>
+    <published>2021-09-06T12:49:00.000Z</published>
+    <updated>2021-09-06T12:50:42.478Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://img-blog.csdnimg.cn/img_convert/e4babf456bc283ef4b4f31d85a80225a.png&quot; alt=&quot;在这里插入图片描述&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="计科课程学习" scheme="http://silence-tang.github.io/categories/%E8%AE%A1%E7%A7%91%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+    <category term="计算机网络" scheme="http://silence-tang.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>概率论与数理统计大作业实验报告</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E5%A4%A7%E4%BD%9C%E4%B8%9A%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E5%A4%A7%E4%BD%9C%E4%B8%9A%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/</id>
+    <published>2021-09-06T12:47:00.000Z</published>
+    <updated>2021-09-06T12:47:54.247Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://img-blog.csdnimg.cn/bff97c67b6b14c1497fc8b33c8273865.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16&quot; alt=&quot;在这里插入图片描述&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="计科课程学习" scheme="http://silence-tang.github.io/categories/%E8%AE%A1%E7%A7%91%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+    <category term="概率论与数理统计" scheme="http://silence-tang.github.io/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>模电期末复习提纲+一些个人笔记</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E6%A8%A1%E7%94%B5%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2+%E4%B8%80%E4%BA%9B%E4%B8%AA%E4%BA%BA%E7%AC%94%E8%AE%B0/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E6%A8%A1%E7%94%B5%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2+%E4%B8%80%E4%BA%9B%E4%B8%AA%E4%BA%BA%E7%AC%94%E8%AE%B0/</id>
+    <published>2021-09-06T12:47:00.000Z</published>
+    <updated>2021-09-06T12:48:48.977Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://img-blog.csdnimg.cn/img_convert/d644cf5dec207cdf29754c567f189bf1.png&quot; alt=&quot;在这里插入图片描述&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="计科课程学习" scheme="http://silence-tang.github.io/categories/%E8%AE%A1%E7%A7%91%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+    <category term="模电" scheme="http://silence-tang.github.io/tags/%E6%A8%A1%E7%94%B5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>数字电路与逻辑设计手写笔记</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF%E4%B8%8E%E9%80%BB%E8%BE%91%E8%AE%BE%E8%AE%A1%E6%89%8B%E5%86%99%E7%AC%94%E8%AE%B0/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF%E4%B8%8E%E9%80%BB%E8%BE%91%E8%AE%BE%E8%AE%A1%E6%89%8B%E5%86%99%E7%AC%94%E8%AE%B0/</id>
+    <published>2021-09-06T12:45:00.000Z</published>
+    <updated>2021-09-06T12:46:21.051Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://img-blog.csdnimg.cn/98ac95a8703149b6822482b420ffa4ef.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16&quot; alt=&quot;在这里插入图片描述&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="计科课程学习" scheme="http://silence-tang.github.io/categories/%E8%AE%A1%E7%A7%91%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+    <category term="数字电路与逻辑设计" scheme="http://silence-tang.github.io/tags/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF%E4%B8%8E%E9%80%BB%E8%BE%91%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>美赛论文图表绘制的一些想法</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E7%BE%8E%E8%B5%9B%E8%AE%BA%E6%96%87%E5%9B%BE%E8%A1%A8%E7%BB%98%E5%88%B6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E7%BE%8E%E8%B5%9B%E8%AE%BA%E6%96%87%E5%9B%BE%E8%A1%A8%E7%BB%98%E5%88%B6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95/</id>
+    <published>2021-09-06T12:43:00.000Z</published>
+    <updated>2021-09-06T12:43:51.428Z</updated>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;关于图表：&quot;&gt;&lt;a href=&quot;#关于图表：&quot; class=&quot;headerlink&quot; title=&quot;关于图表：&quot;&gt;&lt;/a&gt;关于图表：&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;一、流程图、框架图、步骤图&lt;/strong&gt;&lt;br&gt;1.在Our work里，先写一到两段话阐述我们做的工作，然后在下方画一个整个解题的思路流程图(mindmap之类的)，这个图要全面、准确、色彩丰富，能正确反正整个框架思路。&lt;/p&gt;
+&lt;p&gt;2.在进行某一部分的建模完成后，可以画一个仅关于该部分建模的模型框架图。&lt;/p&gt;
+&lt;p&gt;3.某个算法执行的步骤流程图。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="数学建模" scheme="http://silence-tang.github.io/categories/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/"/>
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+    <category term="数学建模" scheme="http://silence-tang.github.io/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>美赛C题相关学习笔记-iPad手写</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E7%BE%8E%E8%B5%9BC%E9%A2%98%E7%9B%B8%E5%85%B3%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-iPad%E6%89%8B%E5%86%99/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E7%BE%8E%E8%B5%9BC%E9%A2%98%E7%9B%B8%E5%85%B3%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-iPad%E6%89%8B%E5%86%99/</id>
+    <published>2021-09-06T12:42:00.000Z</published>
+    <updated>2021-09-06T12:42:57.513Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://img-blog.csdnimg.cn/img_convert/232962c04d3610aa98deda4778159abf.png&quot; alt=&quot;在这里插入图片描述&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="数学建模" scheme="http://silence-tang.github.io/categories/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/"/>
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+    <category term="数学建模" scheme="http://silence-tang.github.io/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>学长美赛经验分享整理-iPad手写</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E5%AD%A6%E9%95%BF%E7%BE%8E%E8%B5%9B%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB%E6%95%B4%E7%90%86-iPad%E6%89%8B%E5%86%99/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E5%AD%A6%E9%95%BF%E7%BE%8E%E8%B5%9B%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB%E6%95%B4%E7%90%86-iPad%E6%89%8B%E5%86%99/</id>
+    <published>2021-09-06T12:39:00.000Z</published>
+    <updated>2021-09-06T13:12:32.389Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://img-blog.csdnimg.cn/img_convert/fc60d2ff5fcc213851e557e83c66195a.png&quot; alt=&quot;在这里插入图片描述&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="数学建模" scheme="http://silence-tang.github.io/categories/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/"/>
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+    <category term="数学建模" scheme="http://silence-tang.github.io/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>美赛优秀论文学习笔记-iPad手写</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E7%BE%8E%E8%B5%9B%E4%BC%98%E7%A7%80%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-iPad%E6%89%8B%E5%86%99/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E7%BE%8E%E8%B5%9B%E4%BC%98%E7%A7%80%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-iPad%E6%89%8B%E5%86%99/</id>
+    <published>2021-09-06T12:36:00.000Z</published>
+    <updated>2021-09-06T13:12:55.396Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://img-blog.csdnimg.cn/img_convert/fc60d2ff5fcc213851e557e83c66195a.png&quot; alt=&quot;在这里插入图片描述&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="数学建模" scheme="http://silence-tang.github.io/categories/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/"/>
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+    <category term="数学建模" scheme="http://silence-tang.github.io/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解决国内访问GitHub慢的问题（不用找ip/修改host）</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E8%A7%A3%E5%86%B3%E5%9B%BD%E5%86%85%E8%AE%BF%E9%97%AEGitHub%E6%85%A2%E7%9A%84%E9%97%AE%E9%A2%98/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E8%A7%A3%E5%86%B3%E5%9B%BD%E5%86%85%E8%AE%BF%E9%97%AEGitHub%E6%85%A2%E7%9A%84%E9%97%AE%E9%A2%98/</id>
+    <published>2021-09-06T12:19:00.000Z</published>
+    <updated>2021-09-06T12:34:34.216Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;  前段时间我在网上搜索了一堆关于解决GitHub访问慢，打不开网页等问题的解答，基本上大部分回答都是围绕以下操作进行的：&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;  “查询 github.global.ssl.fastly.net 和 github.com 两个地址的最新ip再修改本地host文件，最终在cmd用ipconfig/flushdns刷新dns解析。例如→&lt;a href=&quot;https://blog.csdn.net/qq_45921491/article/details/115977828?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-6.base&amp;amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-6.base&quot;&gt;Github访问慢解决办法&lt;/a&gt;”&lt;/em&gt;。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="GitHub" scheme="http://silence-tang.github.io/tags/GitHub/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>纯手撸GitHub个人主页源码(无框架)</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E7%BA%AF%E6%89%8B%E6%92%B8GitHub%E4%B8%AA%E4%BA%BA%E4%B8%BB%E9%A1%B5%E6%BA%90%E7%A0%81(%E6%97%A0%E6%A1%86%E6%9E%B6)/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E7%BA%AF%E6%89%8B%E6%92%B8GitHub%E4%B8%AA%E4%BA%BA%E4%B8%BB%E9%A1%B5%E6%BA%90%E7%A0%81(%E6%97%A0%E6%A1%86%E6%9E%B6)/</id>
+    <published>2021-09-06T12:19:00.000Z</published>
+    <updated>2021-09-06T12:28:06.613Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;  一开始没接触hexo博客框架时为了搞一个GitHub的主页，现学现用徒手撸了一个初代GitHub个人主页的源码，页面风格比较简单清爽，基本上没有使用花里胡哨的设计，可供HTML初学者参考。&lt;br&gt;  通过写这篇初代个人主页的过程，我初步了解并掌握了一丢丢html/css/js/md相关的知识，感觉这对于我学习爬虫以及后来用hexo搭建博客都有很大帮助。现在把这篇个人主页的html设计源码保存一下，权当留个纪念叭☘️…&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="HTML/CSS/MD" scheme="http://silence-tang.github.io/categories/HTML-CSS-MD/"/>
+    
+    
+    <category term="HTML" scheme="http://silence-tang.github.io/tags/HTML/"/>
+    
+    <category term="GitHub" scheme="http://silence-tang.github.io/tags/GitHub/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python简易贪吃蛇小游戏（双人模式）</title>
+    <link href="http://silence-tang.github.io/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8F%8C%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/"/>
+    <id>http://silence-tang.github.io/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8F%8C%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/</id>
+    <published>2021-09-06T12:11:00.000Z</published>
+    <updated>2021-09-06T12:15:09.935Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;  这里介绍双人模式的贪吃蛇&lt;br&gt;  单人模式戳这里：&lt;a href=&quot;https://blog.csdn.net/qq_45717425/article/details/119790028&quot;&gt;Python简易贪吃蛇小游戏（单人模式）&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;一、游戏设计要点&quot;&gt;&lt;a href=&quot;#一、游戏设计要点&quot; class=&quot;headerlink&quot; title=&quot;一、游戏设计要点&quot;&gt;&lt;/a&gt;一、游戏设计要点&lt;/h2&gt;&lt;p&gt;  1.游戏主体窗口（尺寸）、画布（尺寸、位置）、按钮（尺寸、位置）、文字（大小、颜色、位置）、图像、背景音乐及相关响应函数（主要是鼠标移动及点击的响应）的设计与合理排布&lt;br&gt;  2.蛇与食物的类的属性设计&lt;br&gt;  3.蛇位置的更新（根据键盘输入）、吃到食物加分的判定、食物的更新&lt;br&gt;  4.蛇死亡的判定条件设计&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Python学习-爬虫/数据分析/游戏制作" scheme="http://silence-tang.github.io/categories/Python%E5%AD%A6%E4%B9%A0-%E7%88%AC%E8%99%AB-%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-%E6%B8%B8%E6%88%8F%E5%88%B6%E4%BD%9C/"/>
+    
+    
+    <category term="Python" scheme="http://silence-tang.github.io/tags/Python/"/>
+    
+    <category term="pygame" scheme="http://silence-tang.github.io/tags/pygame/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python爬虫学习-简单爬取网页数据</title>
+    <link href="http://silence-tang.github.io/2021/09/06/Python%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0-%E7%AE%80%E5%8D%95%E7%88%AC%E5%8F%96%E7%BD%91%E9%A1%B5%E6%95%B0%E6%8D%AE/"/>
+    <id>http://silence-tang.github.io/2021/09/06/Python%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0-%E7%AE%80%E5%8D%95%E7%88%AC%E5%8F%96%E7%BD%91%E9%A1%B5%E6%95%B0%E6%8D%AE/</id>
+    <published>2021-09-06T12:04:00.000Z</published>
+    <updated>2021-09-06T12:06:03.672Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;strong&gt;  疫情宅家无事，就随便写一些随笔吧QwQ…&lt;/strong&gt;&lt;br&gt;&lt;strong&gt;  这是一篇介绍如何用Python实现简单爬取网页数据并导入MySQL中的数据库的文章。主要用到BeautifulSoup requests 和 pymysql。&lt;/strong&gt;&lt;br&gt;&lt;strong&gt;  以网页&lt;a href=&quot;https://jbk.39.net/mxyy/jbzs/&quot;&gt;https://jbk.39.net/mxyy/jbzs/&lt;/a&gt;为例，假设我们要爬取的部分数据如下图所示：&lt;/strong&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Python学习-爬虫/数据分析/游戏制作" scheme="http://silence-tang.github.io/categories/Python%E5%AD%A6%E4%B9%A0-%E7%88%AC%E8%99%AB-%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-%E6%B8%B8%E6%88%8F%E5%88%B6%E4%BD%9C/"/>
+    
+    
+    <category term="Python" scheme="http://silence-tang.github.io/tags/Python/"/>
+    
+    <category term="爬虫" scheme="http://silence-tang.github.io/tags/%E7%88%AC%E8%99%AB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python简易贪吃蛇小游戏（单人模式）</title>
+    <link href="http://silence-tang.github.io/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8D%95%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/"/>
+    <id>http://silence-tang.github.io/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8D%95%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/</id>
+    <published>2021-09-06T12:04:00.000Z</published>
+    <updated>2021-09-06T12:11:07.386Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;  简单用py写了一个贪吃蛇游戏，有单人、双人模式，比较简单，适合初学者练手。基本上每行重要的语句都有注释，做了什么事一目了然&lt;br&gt;  这里先介绍单人模式&lt;/p&gt;
+&lt;h2 id=&quot;一、游戏设计要点&quot;&gt;&lt;a href=&quot;#一、游戏设计要点&quot; class=&quot;headerlink&quot; title=&quot;一、游戏设计要点&quot;&gt;&lt;/a&gt;一、游戏设计要点&lt;/h2&gt;&lt;p&gt;  1.游戏主体窗口（尺寸）、画布（尺寸、位置）、按钮（尺寸、位置）、文字（大小、颜色、位置）、图像、背景音乐及相关响应函数（主要是鼠标移动及点击的响应）的设计与合理排布&lt;br&gt;  2.蛇与食物的类的属性设计&lt;br&gt;  3.蛇位置的更新（根据键盘输入）、吃到食物加分的判定、食物的更新&lt;br&gt;  4.蛇死亡的判定条件设计&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Python学习-爬虫/数据分析/游戏制作" scheme="http://silence-tang.github.io/categories/Python%E5%AD%A6%E4%B9%A0-%E7%88%AC%E8%99%AB-%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-%E6%B8%B8%E6%88%8F%E5%88%B6%E4%BD%9C/"/>
+    
+    
+    <category term="Python" scheme="http://silence-tang.github.io/tags/Python/"/>
+    
+    <category term="pygame" scheme="http://silence-tang.github.io/tags/pygame/"/>
+    
+  </entry>
+  
+</feed>
