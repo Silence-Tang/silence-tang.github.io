@@ -6,7 +6,7 @@
   <link href="http://silence-tang.github.io/atom.xml" rel="self"/>
   
   <link href="http://silence-tang.github.io/"/>
-  <updated>2021-09-06T13:10:46.310Z</updated>
+  <updated>2021-09-08T12:46:56.800Z</updated>
   <id>http://silence-tang.github.io/</id>
   
   <author>
@@ -15,6 +15,56 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>NexT中文文档</title>
+    <link href="http://silence-tang.github.io/2021/09/08/NexT%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3/"/>
+    <id>http://silence-tang.github.io/2021/09/08/NexT%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3/</id>
+    <published>2021-09-08T12:44:00.000Z</published>
+    <updated>2021-09-08T12:46:56.800Z</updated>
+    
+    
+    <summary type="html">&lt;hr&gt;
+&lt;center&gt;&lt;font size=&quot;5&quot;&gt;&lt;font color=&quot;#1E90FF&quot;&gt;N&lt;/font&gt;&lt;font color=&quot;#00BFFF&quot;&gt;e&lt;/font&gt;&lt;font color=&quot;#00FFF&quot;&gt;x&lt;/font&gt;&lt;font color=&quot;#00FA9A&quot;&gt;T&lt;/font&gt; 中文文档⚡️&lt;/font&gt;&lt;/center&gt;
+
+&lt;hr&gt;
+&lt;h2 id=&quot;一、目录&quot;&gt;&lt;a href=&quot;#一、目录&quot; class=&quot;headerlink&quot; title=&quot;一、目录&quot;&gt;&lt;/a&gt;一、目录&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;安装 NexT&lt;ul&gt;
+&lt;li&gt;下载 NexT 主题&lt;/li&gt;
+&lt;li&gt;启用 NexT 主题&lt;/li&gt;
+&lt;li&gt;验证是否正确启用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;主题设定&lt;ul&gt;
+&lt;li&gt;选择「Scheme」&lt;/li&gt;
+&lt;li&gt;设置「界面语言」&lt;/li&gt;
+&lt;li&gt;设置「菜单」&lt;/li&gt;
+&lt;li&gt;设置「侧栏」&lt;/li&gt;
+&lt;li&gt;设置「头像」&lt;/li&gt;
+&lt;li&gt;设置「作者昵称」&lt;/li&gt;
+&lt;li&gt;设置「站点描述」&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;集成第三方服务&lt;ul&gt;
+&lt;li&gt;百度统计&lt;/li&gt;
+&lt;li&gt;阅读次数统计（LeanCloud）&lt;/li&gt;
+&lt;li&gt;Algolia 搜索&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="Hexo &amp; NexT" scheme="http://silence-tang.github.io/categories/Hexo-NexT/"/>
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+    <category term="NexT" scheme="http://silence-tang.github.io/tags/NexT/"/>
+    
+    <category term="Hexo" scheme="http://silence-tang.github.io/tags/Hexo/"/>
+    
+  </entry>
   
   <entry>
     <title>vs code实现调试运行HTML文件</title>
@@ -432,28 +482,6 @@
     <category term="Python" scheme="http://silence-tang.github.io/tags/Python/"/>
     
     <category term="爬虫" scheme="http://silence-tang.github.io/tags/%E7%88%AC%E8%99%AB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python简易贪吃蛇小游戏（单人模式）</title>
-    <link href="http://silence-tang.github.io/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8D%95%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/"/>
-    <id>http://silence-tang.github.io/2021/09/06/Python%E7%AE%80%E6%98%93%E8%B4%AA%E5%90%83%E8%9B%87%E5%B0%8F%E6%B8%B8%E6%88%8F%EF%BC%88%E5%8D%95%E4%BA%BA%E6%A8%A1%E5%BC%8F%EF%BC%89/</id>
-    <published>2021-09-06T12:04:00.000Z</published>
-    <updated>2021-09-06T12:11:07.386Z</updated>
-    
-    
-    <summary type="html">&lt;p&gt;  简单用py写了一个贪吃蛇游戏，有单人、双人模式，比较简单，适合初学者练手。基本上每行重要的语句都有注释，做了什么事一目了然&lt;br&gt;  这里先介绍单人模式&lt;/p&gt;
-&lt;h2 id=&quot;一、游戏设计要点&quot;&gt;&lt;a href=&quot;#一、游戏设计要点&quot; class=&quot;headerlink&quot; title=&quot;一、游戏设计要点&quot;&gt;&lt;/a&gt;一、游戏设计要点&lt;/h2&gt;&lt;p&gt;  1.游戏主体窗口（尺寸）、画布（尺寸、位置）、按钮（尺寸、位置）、文字（大小、颜色、位置）、图像、背景音乐及相关响应函数（主要是鼠标移动及点击的响应）的设计与合理排布&lt;br&gt;  2.蛇与食物的类的属性设计&lt;br&gt;  3.蛇位置的更新（根据键盘输入）、吃到食物加分的判定、食物的更新&lt;br&gt;  4.蛇死亡的判定条件设计&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Python学习-爬虫/数据分析/游戏制作" scheme="http://silence-tang.github.io/categories/Python%E5%AD%A6%E4%B9%A0-%E7%88%AC%E8%99%AB-%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-%E6%B8%B8%E6%88%8F%E5%88%B6%E4%BD%9C/"/>
-    
-    
-    <category term="Python" scheme="http://silence-tang.github.io/tags/Python/"/>
-    
-    <category term="pygame" scheme="http://silence-tang.github.io/tags/pygame/"/>
     
   </entry>
   
