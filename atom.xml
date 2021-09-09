@@ -6,7 +6,7 @@
   <link href="http://silence-tang.github.io/atom.xml" rel="self"/>
   
   <link href="http://silence-tang.github.io/"/>
-  <updated>2021-09-08T12:46:56.800Z</updated>
+  <updated>2021-09-09T05:31:44.878Z</updated>
   <id>http://silence-tang.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>实用工具</title>
+    <link href="http://silence-tang.github.io/2021/09/08/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/"/>
+    <id>http://silence-tang.github.io/2021/09/08/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/</id>
+    <published>2021-09-08T15:00:00.000Z</published>
+    <updated>2021-09-09T05:31:44.878Z</updated>
+    
+    
+    <summary type="html">&lt;hr&gt;
+&lt;center&gt;&lt;font size=&quot;6&quot;&gt;实用工具/网站/博客&lt;/font&gt;&lt;/center&gt;
+&lt;center&gt;&lt;font size=&quot;3&quot;&gt;——————这里码了一些比较实用的工具&amp;amp;网站&amp;amp;博客&amp;amp;插件——————&lt;/font&gt;&lt;/center&gt;
+
+&lt;hr&gt;
+&lt;h3 id=&quot;1️⃣-HTML-Markdown-CSS&quot;&gt;&lt;a href=&quot;#1️⃣-HTML-Markdown-CSS&quot; class=&quot;headerlink&quot; title=&quot;1️⃣ HTML/Markdown/CSS&quot;&gt;&lt;/a&gt;1️⃣ HTML/Markdown/CSS&lt;/h3&gt;</summary>
+    
+    
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+    <category term="实用工具" scheme="http://silence-tang.github.io/tags/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
   
   <entry>
     <title>NexT中文文档</title>
@@ -255,27 +279,6 @@
   </entry>
   
   <entry>
-    <title>概率论与数理统计大作业实验报告</title>
-    <link href="http://silence-tang.github.io/2021/09/06/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E5%A4%A7%E4%BD%9C%E4%B8%9A%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/"/>
-    <id>http://silence-tang.github.io/2021/09/06/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E5%A4%A7%E4%BD%9C%E4%B8%9A%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/</id>
-    <published>2021-09-06T12:47:00.000Z</published>
-    <updated>2021-09-06T12:47:54.247Z</updated>
-    
-    
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://img-blog.csdnimg.cn/bff97c67b6b14c1497fc8b33c8273865.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16&quot; alt=&quot;在这里插入图片描述&quot;&gt;&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="计科课程学习" scheme="http://silence-tang.github.io/categories/%E8%AE%A1%E7%A7%91%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/"/>
-    
-    
-    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
-    
-    <category term="概率论与数理统计" scheme="http://silence-tang.github.io/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/"/>
-    
-  </entry>
-  
-  <entry>
     <title>模电期末复习提纲+一些个人笔记</title>
     <link href="http://silence-tang.github.io/2021/09/06/%E6%A8%A1%E7%94%B5%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2+%E4%B8%80%E4%BA%9B%E4%B8%AA%E4%BA%BA%E7%AC%94%E8%AE%B0/"/>
     <id>http://silence-tang.github.io/2021/09/06/%E6%A8%A1%E7%94%B5%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2+%E4%B8%80%E4%BA%9B%E4%B8%AA%E4%BA%BA%E7%AC%94%E8%AE%B0/</id>
@@ -293,6 +296,27 @@
     <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
     
     <category term="模电" scheme="http://silence-tang.github.io/tags/%E6%A8%A1%E7%94%B5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>概率论与数理统计大作业实验报告</title>
+    <link href="http://silence-tang.github.io/2021/09/06/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E5%A4%A7%E4%BD%9C%E4%B8%9A%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/"/>
+    <id>http://silence-tang.github.io/2021/09/06/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1%E5%A4%A7%E4%BD%9C%E4%B8%9A%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/</id>
+    <published>2021-09-06T12:47:00.000Z</published>
+    <updated>2021-09-06T12:47:54.247Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://img-blog.csdnimg.cn/bff97c67b6b14c1497fc8b33c8273865.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUG9sYXJpc19U,size_20,color_FFFFFF,t_70,g_se,x_16&quot; alt=&quot;在这里插入图片描述&quot;&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="计科课程学习" scheme="http://silence-tang.github.io/categories/%E8%AE%A1%E7%A7%91%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="经验分享" scheme="http://silence-tang.github.io/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
+    
+    <category term="概率论与数理统计" scheme="http://silence-tang.github.io/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/"/>
     
   </entry>
   
@@ -461,27 +485,6 @@
     <category term="Python" scheme="http://silence-tang.github.io/tags/Python/"/>
     
     <category term="pygame" scheme="http://silence-tang.github.io/tags/pygame/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python爬虫学习-简单爬取网页数据</title>
-    <link href="http://silence-tang.github.io/2021/09/06/Python%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0-%E7%AE%80%E5%8D%95%E7%88%AC%E5%8F%96%E7%BD%91%E9%A1%B5%E6%95%B0%E6%8D%AE/"/>
-    <id>http://silence-tang.github.io/2021/09/06/Python%E7%88%AC%E8%99%AB%E5%AD%A6%E4%B9%A0-%E7%AE%80%E5%8D%95%E7%88%AC%E5%8F%96%E7%BD%91%E9%A1%B5%E6%95%B0%E6%8D%AE/</id>
-    <published>2021-09-06T12:04:00.000Z</published>
-    <updated>2021-09-06T12:06:03.672Z</updated>
-    
-    
-    <summary type="html">&lt;p&gt;&lt;strong&gt;  疫情宅家无事，就随便写一些随笔吧QwQ…&lt;/strong&gt;&lt;br&gt;&lt;strong&gt;  这是一篇介绍如何用Python实现简单爬取网页数据并导入MySQL中的数据库的文章。主要用到BeautifulSoup requests 和 pymysql。&lt;/strong&gt;&lt;br&gt;&lt;strong&gt;  以网页&lt;a href=&quot;https://jbk.39.net/mxyy/jbzs/&quot;&gt;https://jbk.39.net/mxyy/jbzs/&lt;/a&gt;为例，假设我们要爬取的部分数据如下图所示：&lt;/strong&gt;&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Python学习-爬虫/数据分析/游戏制作" scheme="http://silence-tang.github.io/categories/Python%E5%AD%A6%E4%B9%A0-%E7%88%AC%E8%99%AB-%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-%E6%B8%B8%E6%88%8F%E5%88%B6%E4%BD%9C/"/>
-    
-    
-    <category term="Python" scheme="http://silence-tang.github.io/tags/Python/"/>
-    
-    <category term="爬虫" scheme="http://silence-tang.github.io/tags/%E7%88%AC%E8%99%AB/"/>
     
   </entry>
   
